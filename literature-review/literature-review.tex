@@ -13,9 +13,21 @@
 
 \maketitle
 
-\section{Introduction}
-    A review into the background of image recognition and its applications.
+\tableofcontents
 
+\section{Introduction}
+  In order to understand the background of the technology involved in this project, it is necessary to complete a significant review into the current and past literature. This will help form a basis of knowledge from which the future development and analysis of the system will build upon. This research will be vital in order to make use of the most optimal technology for any given task.
+
+\section{Digital image processing}
+  Image processing deals with the analysis and manipulation of image data. An example of image processing is the use of digital signal processing. This involves converting analog sensory data from a digital camera sensor into a computer-interpretable format with minimal data loss from external sources such as noise and distortion.\\
+
+  \subsection{Bitmaps}
+  Before you are able to analyse an image, you must first represent the data in a way that it can be interpreted by a computer, and a human. One basic form of doing this is via a bitmap image. A bitmap - as its name implies - is a simple spacial mapping of values (bits) along a horizontal axis (x) and vertical axis (y). Using a greyscale image as an example, a bitmap representation of this would contain a number of ‘pixels’ - the number of which is equal to the product of the sizes of the x and y axis, therefore an image of size 200x200 would contain 40,000 pixels. Each of these pixels contains an integer value representing brightness, typically ranging from 0 - 255 (the total value range of an 8-bit integer), ‘0’ being completely black, ‘255’ being completely white.\\
+
+  A colour image follows a very similar format, except now each pixel contains three brightness values instead of one. Each of these values map to the brightness of the colours red, green and blue - in that order. Therefore a pixel with values (0,255,0) would be entirely green and a pixel with values (0,0,255) would be entirely blue. It should be noted that when these colours are displayed on a computer screen their colour values are additive (i.e. they can mix together to form a different, brighter colour). A pixel with values (0,255,255) would therefore represent cyan, and finally a pixel with values (255,255,255) would represent white.
+
+\section{Computer vision}
+  Computer vision involves modelling the human vision system in such a way that a computer can interpret abstract visual data.
 
 \bibliographystyle{agsm}
 \bibliography{references}
