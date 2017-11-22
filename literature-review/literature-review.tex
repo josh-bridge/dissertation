@@ -5,6 +5,8 @@
 \usepackage{natbib}
 \usepackage[T1]{fontenc}
 \usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{hyperref}
 
 
 \title{Literature Review}
@@ -15,7 +17,10 @@
 
 \maketitle
 
+
 \tableofcontents
+
+\listoffigures
 
 \doublespacing
 
@@ -31,14 +36,22 @@
   \end{itemize}
 
 \section{Recommendation systems}
-  As defined in \cite{ricci2011introduction}, recommending content is a problem which involves attempting to predict what a user may desire at any given time when using a system. \cite{jannach2010recommender} describe four different methods for giving recommendations: Collaborative, Content-based, Knowledge-based and Hybrid.
+  As defined in \cite{ricci2011introduction}, recommending content is a problem which involves attempting to predict what a user may desire at any given time when using a system. \cite{jannach2010recommender} describe three different methods for giving recommendations: Knowledge-based (inc. Collaborative), Content-based,  and Hybrid.
 
-  \subsection{Collaborative recommendation}
+  \subsection{Knowledge-based / Collaborative recommendation}
+  When using an online streaming platform that serves video content such as Netflix or YouTube, a user will visit their site looking for something to watch. The problem faced by these sites is trying to find content that the user hasn't seen before, but will align with the user's interests enough to make them want to watch it.
+
+  \subsubsection{Spotify - Discover Weekly}
+    \begin{figure}[h]
+      \centering
+      \includegraphics[width=\linewidth]{images/discoverweekly-dataflow}
+      \caption[System component architecture of Spotify's ‘Discover Weekly’]{System component architecture of Spotify's ‘Discover Weekly’ \protect\citep{johnson2015dw}}
+      \label{fig:discoverweekly-dataflow}
+    \end{figure}
+
+  The information needed to carry out such a prediction can include the users history of interaction with the system, from which preference can be extrapolated (a.k.a. ‘metadata’). If there is not enough metadata about the user from which to extrapolate preference with reasonable certainty, then preference can be inferred from other users of the system - especially users with a similar predicted preference.
 
   \subsection{Content-based recommendation}
-
-  \subsection{Knowledge-based recommendation}
-    The information needed to carry out such a prediction can include the users history of interaction with the system, from which preference can be extrapolated (a.k.a. ‘metadata’). If there is not enough metadata about the user from which to extrapolate preference with reasonable certainty, then preference can be inferred from other users of the system - especially users with a similar predicted preference.
 
   \subsection{Hybrid recommendation}
 
@@ -51,6 +64,8 @@
 \section{Web-based user interface}
 
 \section{Conclusion}
+
+\singlespacing
 
 \bibliographystyle{agsm}
 \bibliography{literature-review}
