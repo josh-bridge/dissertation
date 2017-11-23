@@ -40,13 +40,19 @@
 \section{Recommendation systems}
   As defined in \cite{ricci2011introduction}, recommending content is a problem which involves attempting to predict what a user may desire at any given time when using a system. In the ‘internet era’ applications of this are far-reaching, such as recommending products on Amazon.com \cite{linden2003amazon}. Recommendation systems are a popular topic due to the \textquote{abundance of practical applications that help users to deal with information overload and provide personalized recommendations, content, and services to them} \citep{adomavicius2005toward}.
 
-  \cite{jannach2010recommender} describe three different methods for giving recommendations: Knowledge-based (inc. Collaborative), Content-based, and Hybrid.
+  \cite{jannach2010recommender} describe three different methods for giving recommendations: Collaborative, Collaborative, Content-based, Knowledge-based, and Hybrid.
 
-  \subsection{Knowledge-based / Collaborative recommendation}
+  \subsection{Collaborative recommendation}
     When using an online streaming platform that serves video content such as Netflix or YouTube, a user will visit their site looking for something to watch. The problem faced by these sites is trying to find content that the user hasn't seen before, but will align with the user's interests enough to make them want to watch it.
     The information needed to carry out such a prediction can include the users history of interaction with the system, from which preference can be extrapolated (a.k.a. ‘metadata’). If there is not enough metadata about the user from which to extrapolate preference with reasonable certainty, then preference can be inferred from other users of the system - especially users with a similar predicted preference.
 
   \subsection{Content-based recommendation}
+    There can sometimes be barriers to using collaborative recommendation, such as when the ‘cold-start problem’ is present. This problem describes when a user has just signed up to a website, it will not yet have enough information / user history to recommmend them content. % TODO cite %
+    In this situation content-based recommendation could be used more effectively to build up some more reliable recommendations. % TODO cite %
+    There are different kinds of content-based recommendation, as it can be applied to many different kinds of content. For example a system may work differently if the content is user-generated as opposed to internally or computer generated. In a system with user-generated content, the information about that content must be inferred, or provided by the user. % TODO cite %
+
+
+  \subsection{Knowledge-based recommendation}
 
   \subsection{Hybrid recommendation}
 
@@ -63,6 +69,7 @@
       The second, more complicated part of this process is the content-based recommendation. Spotify's algorithms actually analyse the music data in several different ways to determine a users ‘taste’. The first is by defining the generes a user listens to, which it does by scanning music blogs for what genre a certain piece of music is described as being. Using this as a search, spotify can then look for other music in that genre to recommend. The arguably more complicated part of this process is the auditory analysis of raw music data. As shown in figure \ref{fig:discoverweekly-dataflow} the raw audio is converted into ‘batch audio models’ where they can be used as a basis for recommendations.
 
   \subsection{Machine learning recommendation}
+
   \subsection{Image classification in recommendations}
 
 \section{Image-filter generation}
