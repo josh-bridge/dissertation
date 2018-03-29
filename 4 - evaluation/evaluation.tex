@@ -1,0 +1,53 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{natbib}
+\usepackage[T1]{fontenc}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+\graphicspath{ {images/} }
+
+\title{\vspace{2cm}\textbf{Evaluation Design Statement}}
+\author{Joshua Bridge\\14032908\\joshua.m.bridge@stu.mmu.ac.uk}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\doublespacing
+
+\newpage
+
+\section{Description}
+  The aim of this project was to create an application that gives recommendations on filters for images. Therefore it would stand to reason that the success of the application would depend upon these ascpects of the application:
+
+  \begin{enumerate}
+    \item Availability
+    \item Usability
+    \item Satisfaction
+  \end{enumerate}
+
+  \subsection{Availability}
+    In order to use the application, a user must have some means of accessing it, and it should be as easy as possible for them to do so. For example when making a mobile application, a user can easily access a new app by going to an app store and searching for it. For a website, this is as simple as sharing a URL. This means the website should have as little down-time as possible to ensure a user is able to access the application with little time \& effort, for example refreshing the page. This can be measured by using AWS management console which displays how often an error has occured, how many page requests there are and the current status of the system. As long as the usage of the server is within reasonable boundaries the application should stay relatively stable. This means data can be extracted to determine the average availability, such as errors per page visit etc.
+
+  \subsection{Usability}
+    Once a user is on the application, it must be easy enough for them to navigate it and complete the action they came on the app to do. For example when visiting the search engine \url{https://google.co.uk} a user should easily be able to carry out their search. This is done by making the search bar easily visible within the page, and submitting the search is done automatically - which reduces the amount of effort the user must put in to complete their action.
+
+    \cite{nielsen1990heuristic} define some areas which a user interface (UI) should succeed in and how to evaluate them.
+
+  \subsection{Satisfaction}
+    As long as a user knows how to carry out an action, it must then be evaluated how well that action was performed by the system. In the case of this project, the successfulness of the recommendation algorithm is key. This can be tested by identifying if the filter the user ended up choosing was the one which was recommended by the algorithm. This can be done by simply logging which filter was applied when the picture was saved to the device, and matching it up with the recommendation from that image.
+
+\newpage
+\singlespacing
+
+\bibliographystyle{agsm}
+\bibliography{evaluation}
+
+
+\end{document}
