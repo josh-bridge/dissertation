@@ -8,6 +8,7 @@
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{csquotes}
+\usepackage{subcaption}
 \usepackage[top=3.5cm,left=2.5cm,right=2.5cm,bottom=3.5cm]{geometry} % 'showframe' to see borders
 
 \graphicspath{ {images/} }
@@ -63,7 +64,7 @@
    Image processing deals with the analysis and manipulation of image data. An example of image processing is the use of digital signal processing. This involves converting analog sensory data from a digital camera sensor into a computer-interpretable format with minimal data loss from external sources such as noise and distortion.\\
 
    \subsection{Bitmaps}
-     Before you are able to analyse an image, you must first represent the data in a way that it can be interpreted by a computer, and a human. One basic form of doing this is via a bitmap image. A bitmap - as its name implies - is a simple spacial mapping of values (bits) along a horizontal axis (x) and vertical axis (y). Using a greyscale image as an example, a bitmap representation of this would contain a number of values (or ‘pixels’), the number of which is equal to the product of the sizes of the x and y axis. Therefore an image of size 200 x 200 would contain 40,000 pixels. Each of these pixels contains an integer value representing brightness, typically ranging from 0 - 255 (the total value range of an 8-bit integer), ‘0’ being completely black, ‘255’ being completely white.
+     Before you are able to analyse an image, you must first represent the data in a way that it can be interpreted by a computer, and a human. One basic form of doing this is via a bitmap image. A bitmap - as its name implies - is a simple spacial mapping of values (bits) along a horizontal axis (x) and vertical axis (y). Using a greyscale image as an example, a bitmap representation of this would contain a number of values (or ‘pixels’), the number of which is equal to the product of the sizes of the x and y axes. Therefore an image of size 200 x 200 would contain 40,000 pixels. Each of these pixels contains an integer value representing brightness, typically ranging from 0 - 255 (the total value range of an 8-bit integer), ‘0’ being completely black, ‘255’ being completely white.
 
      A colour image follows a very similar format, except now each pixel contains three brightness values instead of one. Each of these values map to the brightness of the colours (or ‘channels’) red, green and blue - in that order. Therefore a pixel with values (0,255,0) would be entirely green and a pixel with values (0,0,255) would be entirely blue. It should be noted that when these colours are displayed on a computer screen their colour values are additive (i.e. they can mix together to form a different, brighter colour). A pixel with values (0,255,255) would therefore represent cyan, and finally a pixel with values (255,255,255) would represent white.
 
@@ -107,7 +108,7 @@
         This type of process is often referred to as ‘Feature extraction’ \citep{guyon2006introduction}.
         When analysing raw data such as an image file or an audio file, this becomes a much more difficult task as you must first find a way of deciphering the content before deriving the subject or meaning.
 
-        Deep learning has recently become a common way of deciphering this content, including for image, audio, and video content types \citep{coates2011analysis}, \citep{ciregan2012multi}, \citep{lee2009unsupervised}, \citep{mobahi2009deep}.
+        Deep learning has recently become a common way of deciphering this content, including for image, audio, and video content types \citep{coates2011analysis,ciregan2012multi,lee2009unsupervised,mobahi2009deep}.
         Spotify has implemented this kind of deep learning to determine genre types from raw audio data - see section \ref{discoverweekly}.
         This can be applied to image data also, for example in the context of a search algorithm, it would bring the most relevant images by content to the top of the results \citep{yee2003faceted}. This works similarly to how a recommender system will select the most relevant items for the user to see.
 
@@ -140,10 +141,10 @@
     \subsection{Instagram} \label{sec:lit-insta}
       In order to create image filters that users would want to apply to their photographs, an assessment must first be made about that the type of photos people tend to post online. ‘Instagram’ is a popular online photo-sharing platform that attracts over 700 million users \citep{instagram2017users}. An investigation by \cite{hu2014we} revealed that the types of photos posted on Instagram could be roughly categorised into eight types: \textquote{self-portraits, friends, activities, captioned photos (pictures with embedded text), food, gadgets, fashion, and pets}. The study clarifies that ‘self-portraits’ (or ‘selfies’) made up 24.2\% of the images posted, and ‘friends’ made up 22.4\%, totalling 46.6\% of the images analysed. From this it can be hypothesized that creating filters which are complimentary for skin-tones would be a contributing factor to success when developing image-filters.
 
-      \cite{hu2014we} however did not study a wide proportion of the Instagram user-base, in fact they only closely studied 50 users, out of an initial 95,343 ‘unique seed users’, from a user-base of more than 150 million when the study was taken place. Furthermore the study only analyses pictures posted online, to Instagram, with public profiles, and from users which had \textquote{at least 30 friends, 30 followers, and had posted at least 60 photos}. The system proposed in this report would not be limited in terms of where the resulting image would be posted, and has no requirement that the image be posted to an online website. Therefore the findings in the study should only be used as a loose guideline for popular image categories when defining image-filter styles.
+      \cite{hu2014we} however did not study a wide proportion of the Instagram user-base, in fact they only closely studied 50 users, out of an initial 95,343 ‘unique seed users’, from a user-base of more than 150 million when the study was taken place. Furthermore the study only analyses pictures posted online, to Instagram, with public profiles, and from users which had \textquote{at least 30 friends, 30 followers, and had posted at least 60 photos}. The system proposed in this report would not be limited in terms of where the resulting image would be posted, and has no requirement that the image be posted to an online website (other than the system itself). Therefore the findings in the study should only be used as a loose guideline for popular image categories when defining image-filter styles.
 
     \subsection{Personalisation of image enhancement}
-      There has been some work done on the mapping of image enhancement styles to personal taste, although the field appears to be still in early stages. However, two studies in particular have heavily contributed to the development in this field. \cite{kang2010personalization} found that when given a set of images, participants would deviate into different styles when asked to choose between two options of enhancement (e.g. lighter or darker). Furthermore, many participants preferred their own enhancement when compared to an averaged enhancement, suggesting that personalised enhancements would be a valuable tool.
+      There has been some work done on the mapping of image enhancement styles to personal taste, although the field appears to be still in early stages. Two studies in particular have heavily contributed to the development in this field. \cite{kang2010personalization} found that when given a set of images, participants would deviate into different styles when asked to choose between two options of enhancement (e.g. lighter or darker). Furthermore, many participants preferred their own enhancement when compared to an averaged enhancement, suggesting that personalised enhancements would be a valuable tool.
 
       Using the work done by \cite{kang2010personalization} as a basis, \cite{caicedo2011collaborative} developed a method of personalised image enhancement that focused on putting users into groups (or ‘clusters’) that had similar tastes within image enhancement. Therefore when attempting to apply personalised enhancement on a per-user basis, instead of determining a specific users preference from scratch, the user's preference would only have to be mapped to a pre-defined group. Using this method the authors suggest that personalisation of image enhancement could be scale-able to large amounts of users.
 
@@ -180,90 +181,176 @@
         \item It should not store user images after the user has finished using the application.
       \end{itemize}
 
-    \section{API}
-      The API is to be written in Python (\url{https://www.python.org}) due to its high suitability for dealing with image data, web-access and recommender algorithms. The application is able to be completely self-contained as it can perform all of the functions required in a single project.
+  \section{API}
+    The API is to be written in Python (\url{https://www.python.org}) due to its high suitability for dealing with image data, web-access and recommender algorithms. The application is able to be completely self-contained as it can perform all of the functions required in a single project.
 
-      \subsection{REST / JSON}
+    \subsection{REST / JSON}
 
-      \subsection{Web Framework}
-        A simple framework for handling HTTP access to the API endpoints is critical when creating an application which is meant to be able to handle high-volume traffic. Flask (\url{http://flask.pocoo.org}) performs exactly this purpose as it is a very lightweight framework which provides very easy methods for transferring data in different formats such as JSON.
+    \subsection{Web Framework}
+      A simple framework for handling HTTP access to the API endpoints is critical when creating an application which is meant to be able to handle high-volume traffic. Flask (\url{http://flask.pocoo.org}) performs exactly this purpose as it is a very lightweight framework which provides very easy methods for transferring data in different formats such as JSON.
 
-        Other frameworks could be considered for this purpose, however few match Flask in terms of low complexity and ease-of-use. Django (\url{https://www.djangoproject.com}) is another very common web framework for Python which comes with many useful features such as a built-in user system. Many of the features, however, are not required within this project and would only increase the complexity of the code in the application. When applying the LSD methodology  \citep{poppendieck2003lean} this would come under the heading of eliminating waste - for example spending less time learning a complex framework and more time actually developing core features \& meeting requirements. Therefore Flask is a good foundation upon which to build a RESTful API that is easy to use \& easy to develop.
+      Other frameworks could be considered for this purpose, however few match Flask in terms of low complexity and ease-of-use. Django (\url{https://www.djangoproject.com}) is another very common web framework for Python which comes with many useful features such as a built-in user system. Many of the features, however, are not required within this project and would only increase the complexity of the code in the application. When applying the LSD methodology \citep{poppendieck2003lean} this would come under the heading of eliminating waste - for example spending less time learning a complex framework and more time actually developing core features \& meeting requirements. Therefore Flask is a good foundation upon which to build a RESTful API that is easy to use \& easy to develop.
 
-      \subsection{Database Storage} % mongodb
-        A database is a crucial component within an application therefore choosing a suitable one is an important step in creating an application. The choice of database technology falls into a few categories such as SQL/NoSQL (or Relational/Non-Relational). There are several differences between these database types such as ability to scale and the types of data which can or should be stored by them. Non-relational databases are useful when the data to be stored is not of a strong structure, where relational databases are more suited for structured, related information. For example a relational database would be well suited for storing products on an online store, where different data such as products or orders can be stored in different tables, with connecting foreign keys. SQL databases are also very good at managing consistency e.g. when data is inserted into a table, there will definitely only be one entry input into the database. This is in comparison to NoSQL where horizontal scaling causes there to be a higher chance of duplicate entries, in an effort to ensure no data is lost while maintaining fast transaction speeds.
+    \subsection{Database Storage} % mongodb
+      A database is a crucial component within an application therefore choosing a suitable one is an important step in creating an application. The choice of database technology falls into a few categories such as SQL/NoSQL (or Relational/Non-Relational). There are several differences between these database types such as ability to scale and the types of data which can or should be stored by them. Non-relational databases are useful when the data to be stored is not of a strong structure, where relational databases are more suited for structured, related information. For example a relational database would be well suited for storing products on an online store, where different data such as products or orders can be stored in different tables, with connecting foreign keys. SQL databases are also very good at managing consistency e.g. when data is inserted into a table, there will definitely only be one entry input into the database. This is in comparison to NoSQL where horizontal scaling causes there to be a higher chance of duplicate entries, in an effort to ensure no data is lost while maintaining fast transaction speeds.
 
-        NoSQL databases are often easier to host than SQL databases due to their ability to scale horizontally \citep{cattell2011scalable} rather than just vertically (i.e. adding more servers to handle load rather than upgrading from one machine to another higher power machine). This is applicable in the context of this project as a requirement (see section \ref{sec:requirements}) is that the application should be able to scale well with more users.
+      NoSQL databases are often easier to host than SQL databases due to their ability to scale horizontally \citep{cattell2011scalable} rather than just vertically (i.e. adding more servers to handle load rather than upgrading from one machine to another higher power machine). This is applicable in the context of this project as a requirement (see section \ref{sec:requirements}) is that the application should be able to scale well with more users.
 
-        When considering the type of data which needed to be stored by the application a NoSQL database seems to be best due to the non-relational types of data to be stored such as API responses. Furthermore speed is a key part as every bit of processing has to be done fast enough for the client not to time out waiting for a response. MongoDB (\url{https://www.mongodb.com}) is a popular NoSQL database with easy connectivity to python using the library pymongo (\url{https://api.mongodb.com/python/current/}). MongoDB is very fast with access speeds of up to 10 times faster than MySQL \citep{han2011survey} and also comes with a strong query language therefore it is highly suited for use in the application.
+      When considering the type of data which needed to be stored by the application a NoSQL database seems to be best due to the non-relational types of data to be stored such as API responses. Furthermore speed is a key part as every bit of processing has to be done fast enough for the client not to time out waiting for a response. MongoDB (\url{https://www.mongodb.com}) is a popular NoSQL database with easy connectivity to python using the library pymongo (\url{https://api.mongodb.com/python/current/}). MongoDB is very fast with access speeds of up to 10 times faster than MySQL \citep{han2011survey} and also comes with a strong query language therefore it is highly suited for use in the application.
 
-      \subsection{Image Filtering}
-        The main bulk of processing done in the API can be broken down into three main components which are filtering, analysis, and recommendation. Filtering is the first step and will involve work to create multiple different photo filters which can be applied to any image which gets submitted to the API. Due to pythons ability to manipulate image data well using several different libraries such as NumPy (see section \ref{sec:numpy}) and Pillow (see section \ref{sec:pillow}).
+    \subsection{Image Filtering}
+      The main bulk of processing done in the API can be broken down into three main components which are filtering, analysis, and recommendation. Filtering is the first step and will involve work to create multiple different photo filters which can be applied to any image which gets submitted to the API. Due to pythons ability to manipulate image data well using several different libraries such as NumPy (see section \ref{sec:numpy}) and Pillow (see section \ref{sec:pillow}).
 
-        When an image enters processing it can be loaded into python using Pillow which creates an array containing each pixel value within the image. The pillow library provides many default methods for manipulating images such as changing brightness or contrast. Furthermore it contains methods which allow it to be transferred to different datatypes such as a NumPy array, where other kinds of mathematical operations can be applied to the pixel data such as linear interpolation. The image can also then be split into three different arrays with one for each colour channel of red, green, \& blue and then operations can be applied individually to create a colour effect on the image. For example if the red channel only was brightned by increasing each pixel value by a certain amount, then when the channels were put into a single image again this would give the image a red tint, which could be desirable for use as a filter.
+      When an image enters processing it can be loaded into python using Pillow which creates an array containing each pixel value within the image. The pillow library provides many default methods for manipulating images such as changing brightness or contrast. Furthermore it contains methods which allow it to be transferred to different datatypes such as a NumPy array, where other kinds of mathematical operations can be applied to the pixel data such as linear interpolation. The image can also then be split into three different arrays with one for each colour channel of red, green, \& blue and then operations can be applied individually to create a colour effect on the image. For example if the red channel only was brightned by increasing each pixel value by a certain amount, then when the channels were put into a single image again this would give the image a red tint, which could be desirable for use as a filter.
 
-        Due to the nature of the application trying to recommend filters, it would stand to reason that the filters in the application should be easily distinguishable to ensure maximum seperability between them. When being entered to the AI component (see section \ref{sec:mlp}) it is much better to have high seperability between classes (or filters) in order to find the relationship between input data and its classification.
+      Due to the nature of the application trying to recommend filters, it would stand to reason that the filters in the application should be easily distinguishable to ensure maximum seperability between them. When being entered to the AI component (see section \ref{sec:mlp}) it is much better to have high seperability between classes (or filters) in order to find the relationship between input data and its classification.
 
-      \subsection{Image Analysis}
-        The second stage of processing (though not related to the first stage) is to analyse the image in order to gather input information for the recommendation algorithm. Providing raw pixel data would not be ideal when processing larger images as this will likely increase processing time greatly. When trying to build a dataset for use in training the recommendation algorithm it would not be ideal to store every picture input into the application as this violates one of the requirements in section \ref{sec:requirements}. Furthermore the raw pixel data will not provide extracted meaningful information such as dominant colours and face detection. Therefore, the best way to proceed is to extract and store information about the image itself without storing any actual image content. As found in section \ref{sec:lit-insta} self-portraits are a highly common type of image posted online so it could be meaningful to extract whether an image contains one or more faces in it. This information could affect how someone chooses which filter they would like to apply to an image so it is vital in this application to include this information. A link between a person in a photograph and the filter being chosen could exist if one of the filters was more complimenting to skin tones for example. In order to find the dominant colours in the image and apply face detection two different methods will be applied and are described below.
+    \subsection{Image Analysis}
+      The second stage of processing (though not related to the first stage) is to analyse the image in order to gather input information for the recommendation algorithm. Providing raw pixel data would not be ideal when processing larger images as this will likely increase processing time greatly. When trying to build a dataset for use in training the recommendation algorithm it would not be ideal to store every picture input into the application as this violates one of the requirements in section \ref{sec:requirements}. Furthermore the raw pixel data will not provide extracted meaningful information such as dominant colours and face detection. Therefore, the best way to proceed is to extract and store information about the image itself without storing any actual image content. As found in section \ref{sec:lit-insta} self-portraits are a highly common type of image posted online so it could be meaningful to extract whether an image contains one or more faces in it. This information could affect how someone chooses which filter they would like to apply to an image so it is vital in this application to include this information. A link between a person in a photograph and the filter being chosen could exist if one of the filters was more complimenting to skin tones for example. In order to find the dominant colours in the image and apply face detection two different methods will be applied and are described below.
 
-        \subsubsection{Dominant colours: K-Means} \label{sec:kmeans}
-          K-Means clustering \citep{macqueen1967some} is a form of machine learning which performs a mathematical analysis on un-labeled data in order to find common groupings within that data. The number of clusters (or groupings) is first specified and the algorithm then splits the data points into that number of groups and then finds an average value for each cluster. K-Means has been used for image segmentation \citep{coleman1979image,shi2000normalized} which is an important part of computer vision. In this case K-Means clustering will be used to find the dominant colours within the image along with their amount of use within the image as a percentage. The colours found from this process will likely not be exactly as they appear in the image due to the averaging of each colour cluster to find the most common groups of colours.
+      \subsubsection{Dominant colours: K-Means} \label{sec:kmeans}
+        K-Means clustering \citep{macqueen1967some} is a form of machine learning which performs a mathematical analysis on un-labeled data in order to find common groupings within that data. The number of clusters (or groupings) is first specified and the algorithm then splits the data points into that number of groups and then finds an average value for each cluster. K-Means has been used for image segmentation \citep{coleman1979image,shi2000normalized} which is an important part of computer vision. In this case K-Means clustering will be used to find the dominant colours within the image along with their amount of use within the image as a percentage. The colours found from this process will likely not be exactly as they appear in the image due to the averaging of each colour cluster to find the most common groups of colours.
 
-          The K-Means algorithm used in this application will not need to be implemented as there is one provided by the scikit-learn library (\url{http://scikit-learn.org/stable/}) which meets all requirements and makes it easier to implement K-Means directly into the application.
+        The K-Means algorithm used in this application will not need to be implemented as there is one provided by the scikit-learn library (\url{http://scikit-learn.org/stable/}) which meets all requirements and makes it easier to implement K-Means directly into the application.
 
-        \subsubsection{Face detection: Google Vision API} \label{sec:visionapi}
-          The Google Vision API (\url{https://cloud.google.com/vision/}) is a useful tool for performing a variety of image analysis steps such as face detection and logo detection. It can be accessed via a REST API using JSON as the request language therefore it should integrate into the application with relative ease using the libraries available in python such as ‘requests’ (\url{http://docs.python-requests.org/en/master/}). Google has not published what technology exactly powers the vision API other than saying in a blog post that it is run using machine learning and TensorFlow (\url{https://www.tensorflow.org}) \citep{vision2015blog}. However, due to the complex nature of face and logo detection it can be assumed that the systems behind the API are running some very complex machine learning models which require a lot of processing power to run. With this in mind it will be much simpler to integrate this API into the application rather than try to implement a custom version of face detection into the application.
+      \subsubsection{Face detection: Google Vision API} \label{sec:visionapi}
+        The Google Vision API (\url{https://cloud.google.com/vision/}) is a useful tool for performing a variety of image analysis steps such as face detection and logo detection. It can be accessed via a REST API using JSON as the request language therefore it should integrate into the application with relative ease using the libraries available in python such as ‘requests’ (\url{http://docs.python-requests.org/en/master/}). Google has not published what technology exactly powers the vision API other than saying in a blog post that it is run using machine learning and TensorFlow (\url{https://www.tensorflow.org}) \citep{vision2015blog}. However, due to the complex nature of face and logo detection it can be assumed that the systems behind the API are running some very complex machine learning models which require a lot of processing power to run. With this in mind it will be much simpler to integrate this API into the application rather than try to implement a custom version of face detection into the application.
 
-      \subsection{Recommendation}
-        The final stage of processing within the application is to get the recommendation for which filter would be best applied to the image.
-        As discovered in section \ref{sec:lit-recc} a good way of doing this is to use neural networks in order to build a relationship between input data and a possible classification. Within this application a form of hybrid recommendation will be used whereby the input to the algorithm will be the results from image analysis as discussed in the previous section. In order to find a relationship between this data and a filter, some data will have to be provided by some initial prototype users in which they will choose a filter for a set of photos of their own choosing.
+    \subsection{Recommendation}
+      The final stage of processing within the application is to get the recommendation for which filter would be best applied to the image.
+      As discovered in section \ref{sec:lit-recc} a good way of doing this is to use neural networks in order to build a relationship between input data and a possible classification. Within this application a form of hybrid recommendation will be used whereby the input to the algorithm will be the results from image analysis as discussed in the previous section. In order to find a relationship between this data and a filter, some data will have to be provided by some initial prototype users in which they will choose a filter for a set of photos of their own choosing.
 
-        Using the stored image analysis data as parameters and the chosen filters as classifiers, a machine learning model can be built which hopefully finds a significant link between image content and the filters which could get applied to them. This is a form of hybrid recommendation as the users interests are powering the recommendation but that information is linked directly to the content of the image, thereby mixing collaborative and content-based recommendation. However, this is not strictly including collaborative recommendation as the users are not being recommended based on tastes of similar users, but more that the collective users are helping to power the content-based recommendation.
+      Using the stored image analysis data as parameters and the chosen filters as classifiers, a machine learning model can be built which hopefully finds a significant link between image content and the filters which could get applied to them. This is a form of hybrid recommendation as the users interests are powering the recommendation but that information is linked directly to the content of the image, thereby mixing collaborative and content-based recommendation. However, this is not strictly including true collaborative recommendation as the users are not being recommended based on tastes of similar users, but more that the collective users are helping to power the content-based recommendation.
 
-        \subsubsection{Multi-Layer Perceptron} \label{sec:mlp}
-          Multi-layer Perceptrons \citep{minsky2017perceptrons} are a type of neural network which can be used for classifying non-linearly separable data. A multi-layer perceptron consists of 1 input layer, 1 output layer and 1-to-many hidden layers which contain neurons that perform an activation function on their inputs. In the case of this application the multi-layer perceptron will be used as a recommendation algorithm by ‘learning’ the connection between image content and image filters. While it may not be best suited for recommendation in place of deep learning for example (section \ref{sec:lit-recc}), the MLP is already implemented in scikit-learn (\url{http://scikit-learn.org/stable/}) and therefore will be much easier to integrate within the application. Furthermore supervised deep-learning is more suited to dealing with pixel data, which this application aims to not keep therefore training a deep-learning model would be much more difficult without linking it to the application beforehand.
+      \subsubsection{Multi-Layer Perceptron} \label{sec:mlp}
+        Multi-layer Perceptrons \citep{minsky2017perceptrons} are a type of neural network which can be used for classifying non-linearly separable data. A multi-layer perceptron consists of 1 input layer, 1 output layer and 1-to-many hidden layers which contain neurons that perform an activation function on their inputs. In the case of this application the multi-layer perceptron will be used as a recommendation algorithm by ‘learning’ the connection between image content and image filters. While it may not be best suited for recommendation in place of deep learning for example (section \ref{sec:lit-recc}), the MLP is already implemented in scikit-learn (\url{http://scikit-learn.org/stable/}) and therefore will be much easier to integrate within the application. Furthermore supervised deep-learning is more suited to dealing with pixel data, which this application aims to not keep therefore training a deep-learning model would be much more difficult.
 
-    \section{Front-end}
-      A front-end is an ideal way to create a testing interface for the API and is a way to advertise to potential users of the API. Therefore one should be built which is capable of running on multiple platforms including mobile phones and desktops. This is so that it is accessible to as many people as possible, by removing as many impedences to accessing the application as possible. The most suitable way of achieving this would be to make the front-end a web-based service which could scale to various screen sizes, and thereby making the application accessible with no downloads required.
+  \section{Front-end}
+    A front-end is an ideal way to create a testing interface for the API and is a good way to advertise to potential users of the API. Therefore one should be built which is capable of running on multiple platforms including mobile phones and desktops. This is so that it is accessible to as many people as possible, by removing as many impedences to accessing the application as possible. The most suitable way of achieving this would be to make the front-end a web-based service which could scale to various screen sizes, and thereby making the application accessible to all with no downloads required.
 
-      \subsection{Frameworks \& Libraries} % React
-        To achieve the best results in terms of aesthetics, functionality and work-effort, a front-end JavaScript framework is ideal for achieving the best results in the shortest time. Their pre-made code structures often eliminate a lot of the grunt work from creating reactive user interfaces from scratch, therefore they are an obvious choice.
+    \subsection{Frameworks \& Libraries} % React
+      To achieve the best results in terms of aesthetics, functionality and work-effort, a front-end JavaScript framework is ideal for achieving the best results in the shortest time. Their pre-made code structures often eliminate a lot of the grunt work from creating reactive user interfaces from scratch, therefore they are an obvious choice.
 
-        While there is little in the way of academic comparisons between JavaScript frameworks as told by \cite{graziotin2013making}, a subjective comparison can be made to find the most suitable framework for this application. The two commonly used libraries/frameworks are React and Angular and are discussed below.
+      While there is little in the way of academic comparisons between JavaScript frameworks as told by \cite{graziotin2013making}, a subjective comparison can be made to find the most suitable framework for this application. Two commonly used libraries/frameworks are React and Angular which are discussed briefly below.
 
+      \subsubsection{React Vs Angular}
         ReactJS (\url{https://reactjs.org}) is a JavaScript library for creating user interfaces which was created by Facebook (\url{https://www.facebook.com}). As it is entirely in JavaScript and introduces a component structure which updates when any data state changes, it is a simple way to add lots of functionality in a short time. AngularJS (\url{https://angularjs.org}) is another JavaScript library however it is not the recommended version of angular which is Angular 4 (\url{https://angular.io}) and is a framework rather than a library. Angular 4 uses typescript which could introduce complexity and the framework comes with a lot of baggage which brings a steeper learning curve as discussed by \cite{neuhaus_2017}.
 
-        ReactJS is the library which will be used in this application due to its flexibility and ease of use with a relatively small learning curve. React Native (\url{https://facebook.github.io/react-native/}) is the variant which shall be used which allows the client to be run completely on its own without another server technology underneath it. This is commonly used to build mobile apps (as stated on the website) therefore it is highly suited for the requirements of this application, as long as the final product is able to easily scale between different browser sizes including desktop and mobile browsers.
+      \subsubsection{Choosing React}
+        ReactJS is the library which will be used in this application due to its flexibility and ease of use with a relatively small learning curve. React Native (\url{https://facebook.github.io/react-native/}) is a variant which can be used to run the JavaScript code as a native mobile app. This method is commonly used to build mobile apps such as Instagram (as stated on the website). While React Native will not be used in this report, it is important to bear in mind the code would be the same, and that React in general is highly optimised for mobile development. Due to these factors React is highly suited for the requirements of this application, as long as the final product is able to easily scale between different browser sizes including desktop and mobile browsers.
 
-    \section{Deployment}
+  \section{Deployment}
 
-      \begin{figure}[ht]
-        \centering
-        \includegraphics[width=\linewidth]{deployment-diagram}
-        \caption{Component deployment diagram}
-        \label{fig:deployment-diagram}
-      \end{figure}
+    \begin{figure}[ht]
+      \centering
+      \includegraphics[width=\linewidth]{deployment-diagram}
+      \caption{Component deployment diagram}
+      \label{fig:deployment-diagram}
+    \end{figure}
 
-      Fig. \ref{fig:deployment-diagram} defines the component layout for the entire workflow of the application proposed in this report.
+    Fig. \ref{fig:deployment-diagram} defines the component layout for the entire workflow of the application proposed in this report.
 
-      \subsection{API - AWS}
+    \subsection{API - AWS}
 
-      \subsection{Front-end - Github Pages}
+    \subsection{Front-end - Github Pages}
 
-    \section{Use Case \& Class diagram}
+  \section{Use Case \& Class diagram}
 
-  % \section{Data structures}
+% \section{Data structures}
 
 \chapter{Implementation} \label{cha:implement}
+  In this chapter the implementation for the application proposed in this report will be laid out. Both the API and the front-end will be developed concurrently to ensure that each of them are able to interact with each other in the easiest way possible. For example if any issues were found when accessing the API using the prototype front-end then they could easily be fixed by changing how the API returns its data.
 
-      \subsection{Other Libraries}
+  Once the code for both the front-end and API has been finished, the resulting applications will be deployed to AWS (\url{https://aws.amazon.com}) and put under the domains of ‘\url{http://inflex.co}’ and ‘\url{https://api.inflex.co}’. Some prototype versions will also be tested throughout for hosting on AWS to ensure the final deployment will be successful.
 
-        \subsubsection{NumPy} \label{sec:numpy}
+  \newpage
+  \section{API}
+    In this section the implementation details for the API including filtering, recommendation and web responding will be explained.
 
-        \subsubsection{SciKit} \label{sec:scikit}
+    \subsection{Image handling} \label{sec:numpy} \label{sec:pillow}
+      While python was chosen for its suitability for image handling, there is not much guidance online for how to handle images in the context of trying to apply photo filters to them. In order to do this a more fundamental understanding of how photo filters worked was required. Essentially it was found that colour effects can be applied individually to each channel (the red, green, and blue channels) in order to adjust the colour palette for that image.
 
-        \subsubsection{Pillow} \label{sec:pillow}
+      In order to do this an image must first be loaded into memory, which it was found can be done using the Pillow library (\url{https://pillow.readthedocs.io/en/5.1.x/}). Figure \ref{fig:image-loading} shows the code required to import an image into memory from an external URL using the Requests library (\url{http://docs.python-requests.org/en/master/}). This is then stored as an ‘\texttt{Image}’ object for which there are various methods within the Pillow library for performing enhancements such as sharpening, brightness adjustment, and contrast adjustment (though these are not per-channel adjustments, rather they appied globally to every channel).
+
+      \begin{figure}[h]
+        \centering
+        \includegraphics[width=0.5\linewidth]{image-loading}
+        \caption{Loading an image into Pillow from an external URL, and from NumPy}
+        \label{fig:image-loading}
+      \end{figure}
+
+      In order for per-channel adjustments to be made it was found that using NumPy (\url{http://www.numpy.org}) enabled much easier handling of pixel values, as they are treated as a multi-dimensional array with x and y dimensions along with an RGB value dimension. Note that most functions require the colour values to be in the range [0,1] as a floating point number rather than a [0,255] integer. The RGB dimension can be split into 3 different arrays for each channel and processed by increasing the channel values by a certain amount. Furthermore other operations can be completed such as adjusting the colour values using linear interpolation. Basically, this allows for fine tuning of colour values in that lower/darker values may get adjusted differently to higher/brighter values.
+
+      In figure \ref{fig:filter-code} two of the filters which ended up being implemented are shown in the form of a python class. The classes extend an interface type class called ‘\texttt{BaseFilter}’ which contains the method stubs required of the filter. The ‘\texttt{apply()}’ method is the actual filtering method, which takes in another custom parameter called ‘\texttt{filterable}’. Most filters use the Pillow ‘\texttt{Image}’ object contained within that parameter and perform some contrast and brightness adjustments. The ‘Black and White’ filter uses only provided Pillow methods to convert the image into a black and white form of the image, as seen in figure \ref{fig:black-and-white-filter-code}. After the adjustments have been made, the seperate channels are then merged into a single array, where they can be converted back to a Pillow ‘\texttt{Image}’ object and returned as a ‘\texttt{Filterable}’ object for further processing.
+
+      \begin{figure}[h]
+        \centering
+        \begin{subfigure}[b]{0.47\textwidth}
+          \centering
+          \caption{‘Joker’ filter class}
+          \includegraphics[width=\linewidth]{joker-filter-code}
+          \label{fig:joker-filter-code}
+        \end{subfigure}
+        \begin{subfigure}[b]{0.47\textwidth}
+          \centering
+          \caption{‘Black and White’ filter class}
+          \includegraphics[width=\linewidth]{black-and-white-filter-code}
+          \label{fig:black-and-white-filter-code}
+        \end{subfigure}
+        \caption{Python filter classes}
+        \label{fig:filter-code}
+      \end{figure}
+
+    \subsection{Web Responding}
+      Once the code had been implemented for adding filters to the images, the next step was to introduce a handler for HTTP API calls, where images can be uploaded to the application and then filtered using the aforementioned code. The Flask library was used to handle the HTTP requests by adding a python method for each URI address which needed to be accessed. It is quite easy to specify using Flask which HTTP method should be used for each URI and there are many built-in methods which handle file uploads to the server, along with restricting which file types can be uploaded. Figure \ref{fig:upload-api-method} shows how a URI structure can be defined using an annotation above a regular Python funtion.
+
+      \begin{figure}[h]
+        \centering
+        \includegraphics[width=0.7\linewidth]{upload-api-method}
+        \caption{Flask image upload API method}
+        \label{fig:upload-api-method}
+      \end{figure}
+
+      Due to Python being able to easily handle both image processing and web requests, it was relatively easy to link both of these functions together.  Once the URI routes had been set up all that was required to link them was creating a function which loops through each of the filter classes, passing in the original image each time. This was made possible due to the code design implemented in the previous section. As each filter was a subclass of ‘\texttt{BaseFilter}’, the built-in Python method ‘\texttt{\_\_subclasses\_\_()}’ returns any objects which are subclasses of that class. All that is then required is to loop through the returned list and run the ‘\texttt{apply()}’ method on each of them.
+
+      Once the filters have been processed then it is possible to create thumbnails and previews of the resulting images using the methods on the ‘\texttt{Filterable}’ object mentioned previously. These thumbnails and previews will need to be uploaded somewhere in order to provide a link which a user can access to retrieve them. Amazon S3 (\url{https://aws.amazon.com/s3/}) was used as a remote hosting site due to its provided Python libraries which handle uploads to the service. For the images to be uploaded they must first be converted into a format such as a JPEG. To do this the built-in ‘\texttt{BytesIO}’ class was used along with the Pillow ‘\texttt{save()}’ method which writes the in-memory image array to a binary format.
+
+      \begin{figure}[h]
+        \centering
+        \includegraphics[width=0.4\linewidth]{python-json-dict}
+        \caption{Python syntax for declaring a ‘\texttt{Dict}’ object}
+        \label{fig:python-json-dict}
+      \end{figure}
+
+      Due to the syntax of Python it was very easy to define the JSON responses for each of the web methods. The Python ‘\texttt{Dict}’ object can be written in a very similar syntax to JSON and can be seen in figure \ref{fig:python-json-dict}. Further to this, the Flask library offers a JSON serializer method called ‘\texttt{jsonify()}’ which automatically converts its parameters into a JSON HTTP response.
+
+      Finally, the REST constraints for the application were able to be met by using appropriate HTTP response codes for the API responses. An example of this is seen at the bottom of figure \ref{fig:upload-api-method} where the HTTP code ‘\texttt{201 CREATED}’ is returned along with the URL for the newly created resource.
+
+    \subsection{Image Analysis}
+      The two main methods for performing image analysis are using the Google Vision API and performing a K-Means colour clustering operation on the image to find the most prevailing colours within it. The K-Means algorithm is already implemented in scikit-learn therefore there was no need to implement it manually, which would have just introduced unnecessary work and applies the ‘Eliminate waste’ principle of LSD \citep{poppendieck2003lean}.
+
+      A value of 5 clusters was used in this instance, which seemed to give a decent range of colours within the image without taking too much processing time. Also only a 100x100 sized version of the image is input into the algorithm to further ensure a fast enough response time for the API, at the risk of losing some colour detail. The algorithm requires a NumPy array, which was easy to supply by converting the Pillow image thumbnail to a NumPy array and re-shaping the array to the ideal shape of 2 dimensions.
+
+      % TODO processing time
+
+      After the K-Means analysis some further analysis is implemented on top of this in order to find the (subjectively) most vibrant colour out of the 5 colours found by K-Means. By using the HSV (rather than RGB) colour space which provides values of saturation and brightness it was easy to order the colours by the product of these two values, and then simply seleting the top item from the ordered list. This information could serve to be valuable for the recommendation algorithm as it could be possible to find a link between different vibrant colours and which filter a user chooses to apply.
+
+      The next step of including a response from the Google Vision API is realatively simple. Using the API documentation by \cite{vision2018apidoc} as a guide a request can be made in which you supply a URL to an image along with the type of analysis to be conducted. Once again this request is made in JSON format which is easy to do in Python. In this case the ‘\texttt{FACE\_DETECTION}’ identifier is sent to the API and the response contains various information about any faces detected in the image. The detail from that response is not used however, as the only information which is desirable in this case is the number of faces in the image which can be found by adding up the number of objects in the ‘\texttt{faceAnnotations}’ array within the JSON response.
+
+    \subsection{Recommendation}
+      Using the data provided from the image analysis components described in the previous sections, the recommendation algorithm has been implemented with relative success. The Multi-Layer Perceptron is also implemented by scikit-learn therefore it made sense to use this implementation rather than create one manually. In order for the MLP to train itself on the data, the data needs to be in the form of a 2D array with normalised values along with a 1D array contiaining the corresponding classifications for each row in the first array. In order to provide such data a series of functions were implemented which convert the stored JSON data about the images (containing the image analysis results) into an array of raw values. More specifically, these raw values correspond to HSV colour values for the dominant colours, their proportional percentage values, and the number of faces in the image.
+
+      The MLP is required to be trained manually by collecting all of the previous responses and formatting them in bulk to be supplied to the algorithm. With this in mind 10 users were asked to use a prototype version of the application and upload as many photos as possible, choosing the filter which they found most appropriate for each image while their choice was logged automatically, though completely anonymously. As a result of this 472 instances were then able to be used to train the MLP using a default train/test split of 75/25\% respectively. The structure for the MLP was one with 3 hidden layers, each with 30 neurons and a maximum training time of 1000 epochs.
+
+      The results from the MLP were relatively poor, as the results after training multiple times appeared to differ greatly. Furthermore the average classification accuracy not going above 40\% in any test. This could be due to a relatively low number of training instances, as well as the data having a poor link between input data and associated classifications.
+
+      The trained model used in the system was selected due to its relatively high average classification accuracy of 37\%, and was saved by serialising the MLP Python object using the Pickle library (\url{https://docs.python.org/3/library/pickle.html}). This model is then able to be loaded into memory when the application starts, in order to be used for classifying new instances supplied by the API code.
+
+    \subsection{Database}
+
+  \section{Front-End}
+
+  \section{Deployment}
 
 \chapter{Evaluation}
   Within this report there were multiple aims which were set out to be achieved. These aims covered a variety of subjects such as computer vision for image analysis and following best practices for developing an API and Web App. The main of these requirements were developing the API, developing the Web front-end, developing a system for filtering images, and most importantly developing a recommender system for those filters. The system proposed and implemented in chapter \ref{cha:implement} meets most of these goals well, and the evaluation of the product will consist of how well the original objectives set out in section \ref{sec:objectives} were met. The objectives and their evaluations are set out below.
