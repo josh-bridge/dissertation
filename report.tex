@@ -256,10 +256,8 @@
 
   \section{Use Case \& Class diagram}
 
-% \section{Data structures}
-
 \chapter{Implementation} \label{cha:implement}
-  In this chapter the implementation for the application proposed in this report will be laid out. Both the API and the front-end will be developed concurrently to ensure that each of them are able to interact with each other in the easiest way possible. For example if any issues were found when accessing the API using the prototype front-end then they could easily be fixed by changing how the API returns its data.
+  In this chapter the implementation for the application proposed in this report will be explained. Both the API and the front-end will be developed concurrently to ensure that each of them are able to interact with each other in the easiest way possible. For example if any issues were found when accessing the API using the prototype front-end then they could easily be fixed by changing how the API returns its data.
 
   Once the code for both the front-end and API has been finished, the resulting applications will be deployed to AWS (\url{https://aws.amazon.com}) and put under the domains of ‘\url{http://inflex.co}’ and ‘\url{https://api.inflex.co}’. Some prototype versions will also be tested throughout for hosting on AWS to ensure the final deployment will be successful.
 
@@ -327,30 +325,100 @@
       Finally, the REST constraints for the application were able to be met by using appropriate HTTP response codes for the API responses. An example of this is seen at the bottom of figure \ref{fig:upload-api-method} where the HTTP code ‘\texttt{201 CREATED}’ is returned along with the URL for the newly created resource.
 
     \subsection{Image Analysis}
-      The two main methods for performing image analysis are using the Google Vision API and performing a K-Means colour clustering operation on the image to find the most prevailing colours within it. The K-Means algorithm is already implemented in scikit-learn therefore there was no need to implement it manually, which would have just introduced unnecessary work and applies the ‘Eliminate waste’ principle of LSD \citep{poppendieck2003lean}.
+      The two main methods for performing image analysis are using the Google Vision API and performing a K-Means colour clustering operation on the image to find the most prevailing colours within it. The K-Means algorithm is already implemented in scikit-learn therefore there was no need to implement it manually, which would have just introduced unnecessary work that goes against the ‘Eliminate waste’ principle of LSD \citep{poppendieck2003lean}.
 
-      A value of 5 clusters was used in this instance, which seemed to give a decent range of colours within the image without taking too much processing time. Also only a 100x100 sized version of the image is input into the algorithm to further ensure a fast enough response time for the API, at the risk of losing some colour detail. The algorithm requires a NumPy array, which was easy to supply by converting the Pillow image thumbnail to a NumPy array and re-shaping the array to the ideal shape of 2 dimensions.
+      A value of 5 clusters was used in this instance of K-Means, which seemed to give a decent range of colours within the image without taking too much processing time. Also only a 100x100 sized version of the image is input into the algorithm to further ensure a fast enough response time for the API, at the risk of losing some colour detail. The algorithm requires a NumPy array, which was easy to supply by converting the Pillow image thumbnail to a NumPy array and re-shaping the array to the ideal shape of 2 dimensions.
 
       % TODO processing time
 
-      After the K-Means analysis some further analysis is implemented on top of this in order to find the (subjectively) most vibrant colour out of the 5 colours found by K-Means. By using the HSV (rather than RGB) colour space which provides values of saturation and brightness it was easy to order the colours by the product of these two values, and then simply seleting the top item from the ordered list. This information could serve to be valuable for the recommendation algorithm as it could be possible to find a link between different vibrant colours and which filter a user chooses to apply.
+      After the K-Means analysis some further analysis is implemented on top of this in order to find the (subjectively) most vibrant colour out of the 5 colours found by K-Means. By using the HSV colour space (rather than RGB) which provides values of saturation and brightness it was easy to order the colours by the product of these two values, and then simply seleting the top item from the ordered list which gives arguably the most vibrant colour. This information could serve to be valuable for the recommendation algorithm as it could be possible to find a link between different vibrant colours and which filter a user chooses to apply.
 
-      The next step of including a response from the Google Vision API is realatively simple. Using the API documentation by \cite{vision2018apidoc} as a guide a request can be made in which you supply a URL to an image along with the type of analysis to be conducted. Once again this request is made in JSON format which is easy to do in Python. In this case the ‘\texttt{FACE\_DETECTION}’ identifier is sent to the API and the response contains various information about any faces detected in the image. The detail from that response is not used however, as the only information which is desirable in this case is the number of faces in the image which can be found by adding up the number of objects in the ‘\texttt{faceAnnotations}’ array within the JSON response.
+      The next step of including a response from the Google Vision API is relatively simple. Using the API documentation by \cite{vision2018apidoc} as a guide, a request can be made in which an image URL is supplied along with the type of analysis to be conducted. Once again this request is made in JSON format which is easy to do in Python. In this case the ‘\texttt{FACE\_DETECTION}’ identifier is sent to the API and the response contains various information about any faces detected in the image. The detail from that response is not used however, as the only information which is desirable in this case is the number of faces in the image which can be found by adding up the number of objects in the ‘\texttt{faceAnnotations}’ array within the JSON response.
 
-    \subsection{Recommendation}
+    \subsection{Recommendation} \label{sec:imp-recc}
       Using the data provided from the image analysis components described in the previous sections, the recommendation algorithm has been implemented with relative success. The Multi-Layer Perceptron is also implemented by scikit-learn therefore it made sense to use this implementation rather than create one manually. In order for the MLP to train itself on the data, the data needs to be in the form of a 2D array with normalised values along with a 1D array contiaining the corresponding classifications for each row in the first array. In order to provide such data a series of functions were implemented which convert the stored JSON data about the images (containing the image analysis results) into an array of raw values. More specifically, these raw values correspond to HSV colour values for the dominant colours, their proportional percentage values, and the number of faces in the image.
 
-      The MLP is required to be trained manually by collecting all of the previous responses and formatting them in bulk to be supplied to the algorithm. With this in mind 10 users were asked to use a prototype version of the application and upload as many photos as possible, choosing the filter which they found most appropriate for each image while their choice was logged automatically, though completely anonymously. As a result of this 472 instances were then able to be used to train the MLP using a default train/test split of 75/25\% respectively. The structure for the MLP was one with 3 hidden layers, each with 30 neurons and a maximum training time of 1000 epochs.
+      The MLP is required to be trained manually by collecting all of the previous responses and formatting them in bulk to be supplied to the algorithm. With this in mind 10 users were asked to use a prototype version of the application and upload as many photos as possible, choosing the filter which they found most appropriate for each image while their choice was logged automatically, though completely anonymously. As a result of this 472 instances were then able to be used to train the MLP using a default train/test split of 75/25\% respectively. The structure used for the MLP was 3 hidden layers, each with 30 neurons, and a maximum training time of 1000 epochs.
 
-      The results from the MLP were relatively poor, as the results after training multiple times appeared to differ greatly. Furthermore the average classification accuracy not going above 40\% in any test. This could be due to a relatively low number of training instances, as well as the data having a poor link between input data and associated classifications.
+      The results from the MLP were relatively poor, as the results after training multiple times appeared to differ greatly. Furthermore the average classification accuracy did not go above 40\% in any test. This could be due to a relatively low number of training instances, as well as the data having a poor link between input data and associated classifications.
 
-      The trained model used in the system was selected due to its relatively high average classification accuracy of 37\%, and was saved by serialising the MLP Python object using the Pickle library (\url{https://docs.python.org/3/library/pickle.html}). This model is then able to be loaded into memory when the application starts, in order to be used for classifying new instances supplied by the API code.
+      The trained model used in the system was selected due to its comparatively high average classification accuracy of 37\%, and was saved by serialising the MLP Python object using the Pickle library (\url{https://docs.python.org/3/library/pickle.html}). This model is then able to be loaded into memory when the application starts, in order to be used for classifying new instances supplied by the API code.
 
     \subsection{Database}
+      The MongoDB database was used for a few different purposes within the implementation. The first is simply to store JSON responses so that when a user accesses an image endpoint for example like ‘\texttt{/images/1234}’, it means that the response can be accessed multiple times with the heavy processing only having to be done once. The second use was to store the results from the image analysis stage so that the results could be used later for input into the recommendation algorithm implemented in section \ref{sec:imp-recc}. The database performed well at this task and using a MongoDB turned out to be very beneficial due to its compatibility with JSON. As JSON was utilised heavily within the implementation and storing everything in it meant virtually no explicit conversion between data structures had to be done (other than going into the recommendation algorithm - as described in the previous section).
 
   \section{Front-End}
+    The front-end web app implementation was relatively simple in terms of complexity however there was a decent learning curve to using React. Having never used a framework/library like this before it took a while to get used to the component-based architecture and how information should flow from component to component.
+
+    \begin{figure}[h]
+      \centering
+      \includegraphics[width=0.7\linewidth]{front-end-main}
+      \caption{The filter selection page of the front-end web app}
+      \label{fig:front-end-main}
+    \end{figure}
+
+    The front-end is comprised of two major components which are the upload / image display area, and the filter thumbnail bar across the bottom of the page. A lot of effort was put into making the site being able to scale to different screen sizes, which turned out to be more difficult than expected. As seen in figure \ref{fig:front-end-main} the image in the center of the page fills most of the negative space between the header and footer. In order to make the center image scale proportionally some code had to be implemented which calculates the correct ratio for the image size and automatically calculates the next best size as soon as the window is re-sized. The result of re-sizing the window to a size more comparable to a mobile screen can be seen in figure \ref{fig:front-end-mobile}.
+
+    \begin{figure}[h]
+      \centering
+      \includegraphics[width=0.5\linewidth]{front-end-mobile}
+      \caption{The filter selection page - scaled to a mobile screen size}
+      \label{fig:front-end-mobile}
+    \end{figure}
+
+    A library called React Slick (\url{https://react-slick.neostack.com}) was used to power animations between different images on the front-end filter selection page. The library has many features built-in which were very useful such as being able to control the state of one image carousel using another - in this case using the thumbnail bar to control the current image in the central area. Both areas are also touch-optimised so on a mobile device it would be possible to quickly swipe between different filters.
+
+    In the top right of figures \ref{fig:front-end-main} \& \ref{fig:front-end-mobile} a blue button can be seen which is the one that a user must click in order for the API to recieve a response that a user has chosen to download an image with a certain filter. Care was taken to make the button stand out from the rest of the page to ensure a user would immediately see it and know what its purpose was. In addition to this, in the bottom of figures \ref{fig:front-end-main} \& \ref{fig:front-end-mobile} one of the filters has a coloured background which is there to indicate that this is the recommended filter. Also when the user uploads their photo and the filters appear on screen, the recommended filter is automatically shown as the central image.
+
+    \newpage
 
   \section{Deployment}
+    The final step for implementing the product proposed in this report is to deploy it to an external server and connect it to a public domain name. The deployment will be carried out in three different sections, which are the API, the front-end and the MongoDB database.
+
+    \subsection{API}
+      In the prototype stages of implementing the API in Python, temporary deployments were run in order to test whether an application developed locally would run as planned on a remote server. This ended up causing a lot of frustration but was also very helpful as it outlined the steps which had to be taken and the configuration which had to be used in the final deployment to ensure it ran successfully. One of the problems was that the application would not start up properly when deployed on a server running Python version 3.6. In response to this a test deployment was tried using Python version 3.4 and it successfully ran the application, and since then development and every deployment has been done using Python 3.4 as the language version.
+
+      \begin{figure}[h]
+        \centering
+        \includegraphics[width=\linewidth]{ec2-info}
+        \caption{API Deployment - AWS EC2 instance status}
+        \label{fig:ec2-info}
+      \end{figure}
+
+      The deployments on AWS were done using the Elastic Beanstalk product which allows for relatively easy set-up. The specific server type which the application is deployed to is a \texttt{t1.micro} server running Python 3.4 on 64bit Amazon Linux version 2.6.4. The server information and running status can be seen in figure \ref{fig:ec2-info} from the AWS EC2 Dashboard page.
+
+      \begin{figure}[h]
+        \centering
+        \includegraphics[width=\linewidth]{api-ssl-cert}
+        \caption{API Security - Domain SSL certificate information}
+        \label{fig:api-ssl-cert}
+      \end{figure}
+
+      In order to have an API which could be considered as secure, an important way of achieving this would be to have the service running securely over HTTPS. In order to achieve this an SSL certificate was purchased from the domain provider NameCheap (\url{https://www.namecheap.com}). The certificate provided was then uploaded to the AWS application instance in order for it to start serving traffic over HTTPS. Details about the certificate are shown in figure \ref{fig:api-ssl-cert} and evidence of connecting using this secure protocol is shown in figure \ref{fig:api-ssl-connection}.
+
+      \begin{figure}[h]
+        \centering
+        \includegraphics[width=0.3\linewidth]{api-ssl-connection}
+        \caption{API Security - Secure connection to API}
+        \label{fig:api-ssl-connection}
+      \end{figure}
+
+    \subsection{Front-end}
+      Deploying the front-end was comparatively simple after deploying the API. The React code can be built using the ‘\texttt{react-scripts build}’ command, which creates a set of files which can be uploaded to a static file hosting server such as AWS S3. Using S3, it is possible to configure the static host to serve the files like a web host and all that needs to be done after that is to point the domain at the static host. As the React code is all based in JavaScript, the resulting front-end is processed entirely on the client therefore a dedicated web service is not required for hosting it.
+
+      Unfortunately, an HTTPS configuration was not achieved on the front-end deployment. However, this is not a huge problem due to the fact that all front-end HTTP calls are made on the client through AJAX, and every call to the API is done over HTTPS as shown in the previous section. This means that any file uploaded to the server is still protected however when downloading the static JavaScript files for the front-end the connection is not secure.
+
+    \subsection{Database}
+      Throughout most of the development stages of the application, a local instance of MongoDB was run for testing the application's interactions to the database. Once it was time to deploy a database to an external server an initial effort was made over a week or so to manually set up an instance of MongoDB on an AWS server. Unfortunately the time spent on this ended up being wasted as after many attempts it was still not possible to connect to the MongoDB instance from the API server. After this, it was discovered that MongoDB themselves offer a service called MongoDB Atlas (\url{https://www.mongodb.com/cloud/atlas}) which provides a free instance of cloud-hosted MongoDB (coincidentally hosted on AWS).
+
+      \begin{figure}[h]
+        \centering
+        \includegraphics[width=0.8\linewidth]{mongodb-atlas-dashboard}
+        \caption{MongoDB Atlas - Deployed cluster dashboard}
+        \label{fig:mongodb-atlas-dashboard}
+      \end{figure}
+
+      The instance provided by MongoDB Atlas includes a primary server and two replica servers which handle back-ups of data. The dashboard information about the deployed instance used in the application is shown in figure \ref{fig:mongodb-atlas-dashboard}. Once the database service was up and running it was then trivial to change the connection details in the API code to then point at the new service instead of the local service. No further set up was needed to start using the service due to the fact that MongoDB has no constraints on what document structures can be stored on the database. If for example an SQL server was used it would have required runnning lots of SQL scripts to make sure the server was configured correctly before any data could be inputted into it.
 
 \chapter{Evaluation}
   Within this report there were multiple aims which were set out to be achieved. These aims covered a variety of subjects such as computer vision for image analysis and following best practices for developing an API and Web App. The main of these requirements were developing the API, developing the Web front-end, developing a system for filtering images, and most importantly developing a recommender system for those filters. The system proposed and implemented in chapter \ref{cha:implement} meets most of these goals well, and the evaluation of the product will consist of how well the original objectives set out in section \ref{sec:objectives} were met. The objectives and their evaluations are set out below.
@@ -372,6 +440,16 @@
     This objective was met easily with the python back-end using the Flask library. This library included helper methods for handling RESTful API's and allowed for doing things such as responding with an ‘\texttt{HTTP 201 CREATED}’ response when a resource was uploaded to the site via an ‘\texttt{HTTP POST}’ request. The URI structure was also within REST constraints, with images being uploaded to the ‘\texttt{/images/}’ URL via an ‘\texttt{HTTP POST}’ request, then being accesed using an ‘\texttt{HTTP GET}’ request from that URL such as\\ ‘\texttt{/images/98119-black\_and\_white.jpg}’. The URI structure was relatively simple due to the simplicity of the request being made therefore it was easier to develop. The responses from the API were also very easy to output as JSON due to python's ability to define a ‘\texttt{dict}’ object using a very similar syntax to JSON, directly in the code. This ‘\texttt{dict}’ object could then easily be translated into an HTTP response using Flask's ‘\texttt{jsonify()}’ method. The API was then easily connected to the front-end and using React which is based in JavaScript made handling JSON responses that much easier, due to JavaScript's high integration with JSON (which makes sense as JSON stands for JavaScript Object Notation...).
 
 \chapter{Conclusion}
+  This report has outlined a system which can be used to filter photographs by accessing a REST API, or by connecting to an accompanying web app using a desktop web browser. The API and web app are able to give a recommendation of which filter should be chosen based on the content of the image, however this recommendation was not proven to be very accurate. The code solution is simple and includes many carefully chosen libraries to handle difficult tasks, rather than implementing them manually which creates unnecessary work and introduces too much complexity into the product. Due to time constraints some issues were left unsolved such as not having HTTPS on the front-end server and the front-end not working on mobile devices.
+
+  \newpage
+  \section{Further work}
+    If offered more time to extend the functionality of the product, initially the existing problems mentioned in the preceeding paragraph could be addressed. Further to solving those issues, as a result of the low accuracy from the recommendation algorithm a more advanced recommender algorithm could be implemented. This could include developing a user system which is able to track individual user history for applying photo filters and have that data be used to provide more personalised recommendations for users.
+
+  \section{Author reflection}
+    When starting this project I set out a personal goal to learn a few different technologies such as Python, React, and AWS. I do feel like I was able to do this and also create a product which serves its purpose relatively well. However, I think the biggest hindrance throughout the project was that every time I started work on a different part of the product implementation I would have to start from absolute scratch, spending more time learning the basics than implementing desired features. This lead to some gaps in quality of code design, and features which never made it into the final product.
+
+    Overall, I have enjoyed the process of completing this project and it feels like the true summation of all the work I have put in over my whole university career. I hope to utilise lessons learned from this project throughout my later life in both programming and real life.
 
 \newpage
 \singlespacing
