@@ -12,7 +12,7 @@
 
 \graphicspath{ {images/} }
 
-\def \reportTitle{Recommending photo filters via image content in a REST API}
+\def \reportTitle{Recommending photo filters via image content in a Web App \& REST API}
 
 \title{\vspace{-2cm}\includegraphics[width=5cm]{mmu-white.pdf}\\\vspace{4cm}\reportTitle\vspace{1cm}}
 
@@ -37,6 +37,27 @@
 \chapter{Introduction}
   % TODO Complete summary of introduction
   % ADD
+
+  \newpage
+
+  \section{Aims}
+    In this report the following goals are what is expected to be achieved in the creation of the product:
+
+    \begin{enumerate}
+      \item To reduce complexity, information overload, and time spent for users when trying to customise photographs - usually in the expectation that the photographs will later be shared on social media.
+      \item To create a secure platform for other applications to utilise the advancements made in this project.
+    \end{enumerate}
+
+  \section{Objectives} \label{sec:objectives}
+    The objectives below describe in more detail a set of more specific goals which should be achieved in order to create a successful product:
+
+    \begin{enumerate}
+      \item \label{obj1}Implement a simple online web application for filtering images using a framework or library designed for front-end development across multiple platforms.
+      \item \label{obj2}Implement a back-end application which is able to process images including applying filters and creating thumbnails.
+      \item \label{obj3}Research various recommender systems to determine the common technologies/solutions for solving the problem of recommendations.
+      \item \label{obj4}Implement a recommender system which is able to suggest photo filters to users based on image content.
+      \item \label{obj5}Implement a RESTful API which exposes both the recommender system and the filtering system to the front-end web app and allows developers to connect them into their own applications.
+    \end{enumerate}
 
   \section{Digital image processing}
    Image processing deals with the analysis and manipulation of image data. An example of image processing is the use of digital signal processing. This involves converting analog sensory data from a digital camera sensor into a computer-interpretable format with minimal data loss from external sources such as noise and distortion.\\
@@ -63,7 +84,7 @@
 
   \begin{itemize}
     \item The recommendation system.
-    \item The image-filter generation system.
+    \item The image filtering system.
     % \item The web-based user interface.
   \end{itemize}
 
@@ -113,7 +134,7 @@
 
       % \subsection{Image classification in recommendations}
 
-  \section{Image-filter generation}
+  \section{Image filtering system}
     There is little to no research into the area of developing new photo filters, likely due to the fact that filters can be very subjective in terms of what effect they have on an image. Furthermore the relation of that effect to how many people choose that filter for a certain type of photograph would require a large data-set. However it is possible to determine the most common types of photographs posted online, which will guide the process of creating filter templates.
 
     \subsection{Instagram} \label{sec:lit-insta}
@@ -213,7 +234,7 @@
 
         ReactJS (\url{https://reactjs.org}) is a JavaScript library for creating user interfaces which was created by Facebook (\url{https://www.facebook.com}). As it is entirely in JavaScript and introduces a component structure which updates when any data state changes, it is a simple way to add lots of functionality in a short time. AngularJS (\url{https://angularjs.org}) is another JavaScript library however it is not the recommended version of angular which is Angular 4 (\url{https://angular.io}) and is a framework rather than a library. Angular 4 uses typescript which could introduce complexity and the framework comes with a lot of baggage which brings a steeper learning curve as discussed by \cite{neuhaus_2017}.
 
-        ReactJS is the library which will be used in this application due to its flexibility and ease of use with a relatively small learning curve. React Native (\url{https://facebook.github.io/react-native/}) is the variant which shall be used which allows the client to be run completely on its own without another server technology underneath it. This is commonly used to build mobile apps (as stated on the website) therefore it is highly suited for the requirements of this application, as long as the final product is able to eaily scale between different browser sizes including desktop and mobile browsers.
+        ReactJS is the library which will be used in this application due to its flexibility and ease of use with a relatively small learning curve. React Native (\url{https://facebook.github.io/react-native/}) is the variant which shall be used which allows the client to be run completely on its own without another server technology underneath it. This is commonly used to build mobile apps (as stated on the website) therefore it is highly suited for the requirements of this application, as long as the final product is able to easily scale between different browser sizes including desktop and mobile browsers.
 
     \section{Deployment}
 
@@ -234,7 +255,7 @@
 
   % \section{Data structures}
 
-\chapter{Implementation}
+\chapter{Implementation} \label{cha:implement}
 
       \subsection{Other Libraries}
 
@@ -245,6 +266,23 @@
         \subsubsection{Pillow} \label{sec:pillow}
 
 \chapter{Evaluation}
+  Within this report there were multiple aims which were set out to be achieved. These aims covered a variety of subjects such as computer vision for image analysis and following best practices for developing an API and Web App. The main of these requirements were developing the API, developing the Web front-end, developing a system for filtering images, and most importantly developing a recommender system for those filters. The system proposed and implemented in chapter \ref{cha:implement} meets most of these goals well, and the evaluation of the product will consist of how well the original objectives set out in section \ref{sec:objectives} were met. The objectives and their evaluations are set out below.
+
+  \newpage
+  \subsubsection{Objective \ref{obj1} - Implement a simple online web application for filtering images using a framework or library designed for front-end development across multiple platforms.}
+    The front-end propsosed in this report is very effective in its use as an interface on top of the API. It is very lightweight and simple however it is also very functional and robust. The use of React really helped to streamline the development as it meant the structure in the code of the front-end was already much easier to work with. The component structure allows for very easy management of application flow, with variables and callback functions being passed to child components the application is easily able to deal with calling an external API and passing that information to components which automatically update upon recieving that information. However, the requirement for the web app working across multiple platforms was not met. During development the front-end was run purely on a few different desktop browsers such as Safari and Chrome which worked perfectly, however after finally deploying it to a public URL and accessing it from a mobile device it was found that no response came back to the device once an image was uploaded for filtering. Due to the nature of mobile devices there was no easy way to troubleshoot what was going on, where on a desktop device this could easily be done by debugging it in an IDE. Finally, there was not enough time after deploying the application to do an investigation into this issue therefore it can only be viewed as a partial failure to meet one of the objectives.
+
+  \subsubsection{Objective \ref{obj2} - Implement a back-end application which is able to process images including applying filters and creating thumbnails.}
+    The python back-end proposed in this report is highly capable of processing images due to the libraries available and its ability to connect easily to the API code. The libraries NumPy and Pillow were both instrumental to the success of image processing, however there was a decent learning curve to both of these along with python itself. This slightly limited how much processing was able to be done on the images as much more time had to be spent researching what libraries are available and what the best practices are for processing images in python. The code design proposed helped very much in how the filters connected to the API, as each filter was a sub-class of a base filter the filters could easily be run by looping through the ‘\texttt{\_\_subclasses\_\_()}’ method on the base class, passing in the ‘\texttt{Filterable}’ object each time. The ‘\texttt{Filterable}’ class also allowed the images to be quickly converted from Pillow types to NumPy types, and also to resize the image into different sizes such as thumbnail and preview sizes.
+
+  \subsubsection{Objective \ref{obj3} - Research various recommender systems to determine the common technologies/solutions for solving the problem of recommendations.}
+    In section \ref{sec:lit-recc} various examples of recommender systems were found and a general concensus was discovered that machine learning tools are a very useful tool in recommender systems. While there was not a single blanket solution, and the solutions available are often still not very effective - facing issues such as the cold-start problem which is still a popular research topic. Deep learning was discovered to be a very common tool in industry however this was not feasible due to performance constraints and that they did not seem to be fully applicable to the problem of recommending filters.
+
+  \subsubsection{Objective \ref{obj4} - Implement a recommender system which is able to suggest photo filters to users based on image content.}
+    Within this objective the strict definition was met, as a recommender system was built which is able to recommend filters based on image content. However, the accuracy of the AI system which was implemented was not very high, and often came up with highly inconsistent values when producing classification accuracy reports. When using a trained model with a higher trained accuracy of around 35\% on average per class, the model did however seem to have some predictability in how it would recommend filters such as when the photo included one or more faces. The low accuracy would seem to suggest that the method for training the model was not ideal in that users may have had differing tastes for which filters to apply. Furthermore the recommender would occasionally suggest different recommendations when the same photograph was uploaded twice. This is likely a combination of the K-Means analysis producing slightly different results each time and the classifiers not having a strong enough trained model.
+
+  \subsubsection{Objective \ref{obj5} - Implement a RESTful API which exposes both the recommender system and the filtering system to the front-end web app and allows developers to connect them into their own applications.}
+    This objective was met easily with the python back-end using the Flask library. This library included helper methods for handling RESTful API's and allowed for doing things such as responding with an ‘\texttt{HTTP 201 CREATED}’ response when a resource was uploaded to the site via an ‘\texttt{HTTP POST}’ request. The URI structure was also within REST constraints, with images being uploaded to the ‘\texttt{/images/}’ URL via an ‘\texttt{HTTP POST}’ request, then being accesed using an ‘\texttt{HTTP GET}’ request from that URL such as\\ ‘\texttt{/images/98119-black\_and\_white.jpg}’. The URI structure was relatively simple due to the simplicity of the request being made therefore it was easier to develop. The responses from the API were also very easy to output as JSON due to python's ability to define a ‘\texttt{dict}’ object using a very similar syntax to JSON, directly in the code. This ‘\texttt{dict}’ object could then easily be translated into an HTTP response using Flask's ‘\texttt{jsonify()}’ method. The API was then easily connected to the front-end and using React which is based in JavaScript made handling JSON responses that much easier, due to JavaScript's high integration with JSON (which makes sense as JSON stands for JavaScript Object Notation...).
 
 \chapter{Conclusion}
 
