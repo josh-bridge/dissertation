@@ -29,11 +29,13 @@
   \textit{To be completed.}
 \end{abstract}
 
+\onehalfspacing
 \tableofcontents
+\doublespacing
 
 \listoffigures
 
-\listoftables
+% \listoftables
 
 \chapter{Introduction}
   % TODO Complete summary of introduction
@@ -78,7 +80,6 @@
    Computer vision involves modelling the human vision system in such a way that a computer can interpret abstract visual data.
 
 \chapter{Literature Review}
-
   In order to understand the background of the technology involved in this project, it is necessary to complete a significant review into the current and past literature. This will help form a basis of knowledge from which the future development and analysis of the proposed system will utilise and build upon. This research will be vital in order to make use of the most optimal technology for any given problem.
 
   The following review will be an investigation into the current knowledge of the major components of the proposed system, which are as follows:
@@ -112,10 +113,8 @@
         Spotify has implemented this kind of deep learning to determine genre types from raw audio data - see section \ref{discoverweekly}.
         This can be applied to image data also, for example in the context of a search algorithm, it would bring the most relevant images by content to the top of the results \citep{yee2003faceted}. This works similarly to how a recommender system will select the most relevant items for the user to see.
 
-        Google's ImageNet has proven to be a very reliable system for image classification \citep{krizhevsky2012imagenet}.
+        Google's neural network implementation has proven to be a very reliable system for image classification \citep{krizhevsky2012imagenet}.
         As it has a very high accuracy on most image types, it would be reasonably effective for providing a basis of feature extraction for use in a recommender system. In the system proposed in this report, scene classification along with prevailing colours in the image would be an ideal input into the recommendation system for determining optimal image filters.
-
-        % TODO more on ImageNet
 
     \subsection{Hybrid recommendation}
       Generally, hybrid recommendation applies both of the previous methods together in order to draw up a more comprehensive list of recommendations, in order to avoid the individual weaknesses of both types.
@@ -133,8 +132,6 @@
 
         The second, more complicated part of this process is the content-based recommendation. Spotify's algorithms actually analyse the music data in several different ways to determine a users ‘taste’. The first is by defining the genres a user listens to, which it does by scanning music blogs for what genre a certain piece of music is described as being. Using this as a search, spotify can then look for other music in that genre to recommend. The arguably more complicated part of this process is the auditory analysis of raw music data. As shown in figure \ref{fig:discoverweekly-dataflow} the raw audio is converted into ‘batch audio models’ where they can be used as a basis for recommendations.
 
-      % \subsection{Image classification in recommendations}
-
   \section{Image filtering system}
     There is little to no research into the area of developing new photo filters, likely due to the fact that filters can be very subjective in terms of what effect they have on an image. Furthermore the relation of that effect to how many people choose that filter for a certain type of photograph would require a large data-set. However it is possible to determine the most common types of photographs posted online, which will guide the process of creating filter templates.
 
@@ -148,15 +145,13 @@
 
       Using the work done by \cite{kang2010personalization} as a basis, \cite{caicedo2011collaborative} developed a method of personalised image enhancement that focused on putting users into groups (or ‘clusters’) that had similar tastes within image enhancement. Therefore when attempting to apply personalised enhancement on a per-user basis, instead of determining a specific users preference from scratch, the user's preference would only have to be mapped to a pre-defined group. Using this method the authors suggest that personalisation of image enhancement could be scale-able to large amounts of users.
 
-  % \section{Web-based user interface}
-
   \newpage
 
   \section{Conclusion}
     Posting images online is fast becoming one of the biggest trends in recent history, as evidenced by Instagram's user-base expanding to over 700 million users \citep{instagram2017users}. While not much public research seems to have been carried out into the reasons why users pick certain styles of image-filters before posting, it certainly appears viable to aid them in making that process easier.
     The findings of this review suggest that feature extraction could be a useful tool in developing recommendations for filters. This would be carried out in the form of image classification, most commonly to determine whether a person is present in a photograph which would thereby influence the algorithm's decision of what filters to recommend to the user for a certain image.
 
-    The findings of this report also suggest (mostly from \cite{kang2010personalization} and \cite{caicedo2011collaborative}) that the field of personalised image enhancements (or filters) is a relatively new field of study, therefore there is a lot of room for collecting new findings by extending upon previous works in a new implementation.
+    The findings of this review also suggest (mostly from \cite{kang2010personalization,caicedo2011collaborative}) that the field of personalised image enhancements (or filters) is a relatively new field of study, therefore there is a lot of room for collecting new findings by extending upon previous works in a new implementation.
 
 \chapter{Design}
   In this chapter a detailed description of the product design will be laid out, including explanations for each choice of technology and how it will enable the product to achieve its goal. The product can essentially be split up into two major components - a RESTful API \& a web-based front-end. Creating an API is an important factor in the implementation as it defines how the flow of the client application will work. As a result, technologies must be chosen which easily make use of this type of application-flow such as a framework which integrates well with AJAX calls - a common way of connecting to APIs. The front-end development is also a crucial part of the implementation as it acts as a testing interface for the API. If the API is not structured well then designing a front-end around it is much more difficult, meaning any future developers wishing to use it might be dissuaded by its complexity and end up choosing a different service. Developing both at the same time makes it much easier to see how clients will access the service, therefore making it much easier to remove any complexity it may contain while the service is still being built.
@@ -181,15 +176,42 @@
         \item It should not store user images after the user has finished using the application.
       \end{itemize}
 
+  \section{Application architecture proposal}
+    Figure \ref{fig:application-diagram} shows the proposed architectural flow for the product being created using an example image from \cite{cat2013image}. It shows how an image is uploaded to Amazon S3 before being analysed, then the filtered previews are uploaded to S3 before the API response is generated.
+
+    \begin{figure}[h]
+      \centering
+      \includegraphics[width=\linewidth]{application-diagram}
+      \caption{Architecture flow from client to API and their interactions}
+      \label{fig:application-diagram}
+    \end{figure}
+
+    The final version of the API and front-end components will be hosted seperately on AWS due to its high configurability, with support for multiple different platforms and programming languages.
+
   \section{API}
     The API is to be written in Python (\url{https://www.python.org}) due to its high suitability for dealing with image data, web-access and recommender algorithms. The application is able to be completely self-contained as it can perform all of the functions required in a single project.
 
-    \subsection{REST / JSON}
+    \subsection{REST \& JSON}
+      When developing an API, one of the biggest considerations which must be made is how the end user will be interacting with it. If an API is too complex and performs against a developers expectations, it could make it much more likely that developer might abandon it in favour of another competing product. Following an established architectural guideline makes it much easier to develop a clear API while spending more time focusing on developing core features. REST is a guideline developed by \cite{fielding2000architectural} which describes a resource-oriented method of designing APIs. This is the guideline that the API in this report will be attempting to follow.
+
+      As many of the interactions with other services in this project are required to be completed using JSON as an interchange format, it stands to reason that it would be a good idea to also use this format for API responses. This is not just because it is popular, but also that converting data between different formats could be seen as unnecessary complexity within the application.
+
+      \subsubsection{URI design}
+        As there are not many operations which are required to be completed by the API, the number of endpoints can be kept to a relative minimum. Figure \ref{fig:api-call-flow} illustrates an example of how a client would connect to the API where the orange rows indicate a server action and the white rows indicate a client action.
+
+        \begin{figure}[h]
+          \centering
+          \includegraphics[width=0.5\linewidth]{api-call-flow}
+          \caption{Example flow of API access from client}
+          \label{fig:api-call-flow}
+        \end{figure}
+
+        Using figure \ref{fig:api-call-flow} as the expectation for what interactions will happen on the sever, a simple URI of ‘\texttt{/images/}’ can be created for the first HTTP POST request. Then the new resource URI in the accompanying response could be an extension of this, containing a generated unique id for the resource. For example ‘\texttt{/images/1234}’ can be used to access the resource. The full version of the image then can be available at ‘\texttt{/images/1234-filter-name.jpg}’, with that URI contained within the original resource body so the client can easily access it.
 
     \subsection{Web Framework}
       A simple framework for handling HTTP access to the API endpoints is critical when creating an application which is meant to be able to handle high-volume traffic. Flask (\url{http://flask.pocoo.org}) performs exactly this purpose as it is a very lightweight framework which provides very easy methods for transferring data in different formats such as JSON.
 
-      Other frameworks could be considered for this purpose, however few match Flask in terms of low complexity and ease-of-use. Django (\url{https://www.djangoproject.com}) is another very common web framework for Python which comes with many useful features such as a built-in user system. Many of the features, however, are not required within this project and would only increase the complexity of the code in the application. When applying the LSD methodology \citep{poppendieck2003lean} this would come under the heading of eliminating waste - for example spending less time learning a complex framework and more time actually developing core features \& meeting requirements. Therefore Flask is a good foundation upon which to build a RESTful API that is easy to use \& easy to develop.
+      Other frameworks could be considered for this purpose, however few match Flask in terms of low complexity and ease-of-use. Django (\url{https://www.djangoproject.com}) is another very common web framework for Python which comes with many useful features such as a built-in user system. Many of the features, however, are not required within this project and would only increase the complexity of the code in the application. When applying the Lean Software Develoment methodology \citep{poppendieck2003lean} this would come under the heading of eliminating waste - for example spending less time learning a complex framework and more time actually developing core features \& meeting requirements. Therefore Flask is a good foundation upon which to build a RESTful API that is easy to use \& easy to develop.
 
     \subsection{Database Storage} % mongodb
       A database is a crucial component within an application therefore choosing a suitable one is an important step in creating an application. The choice of database technology falls into a few categories such as SQL/NoSQL (or Relational/Non-Relational). There are several differences between these database types such as ability to scale and the types of data which can or should be stored by them. Non-relational databases are useful when the data to be stored is not of a strong structure, where relational databases are more suited for structured, related information. For example a relational database would be well suited for storing products on an online store, where different data such as products or orders can be stored in different tables, with connecting foreign keys. SQL databases are also very good at managing consistency e.g. when data is inserted into a table, there will definitely only be one entry input into the database. This is in comparison to NoSQL where horizontal scaling causes there to be a higher chance of duplicate entries, in an effort to ensure no data is lost while maintaining fast transaction speeds.
@@ -237,22 +259,7 @@
         ReactJS (\url{https://reactjs.org}) is a JavaScript library for creating user interfaces which was created by Facebook (\url{https://www.facebook.com}). As it is entirely in JavaScript and introduces a component structure which updates when any data state changes, it is a simple way to add lots of functionality in a short time. AngularJS (\url{https://angularjs.org}) is another JavaScript library however it is not the recommended version of angular which is Angular 4 (\url{https://angular.io}) and is a framework rather than a library. Angular 4 uses typescript which could introduce complexity and the framework comes with a lot of baggage which brings a steeper learning curve as discussed by \cite{neuhaus_2017}.
 
       \subsubsection{Choosing React}
-        ReactJS is the library which will be used in this application due to its flexibility and ease of use with a relatively small learning curve. React Native (\url{https://facebook.github.io/react-native/}) is a variant which can be used to run the JavaScript code as a native mobile app. This method is commonly used to build mobile apps such as Instagram (as stated on the website). While React Native will not be used in this report, it is important to bear in mind the code would be the same, and that React in general is highly optimised for mobile development. Due to these factors React is highly suited for the requirements of this application, as long as the final product is able to easily scale between different browser sizes including desktop and mobile browsers.
-
-  \section{Deployment}
-
-    \begin{figure}[ht]
-      \centering
-      \includegraphics[width=\linewidth]{deployment-diagram}
-      \caption{Component deployment diagram}
-      \label{fig:deployment-diagram}
-    \end{figure}
-
-    Fig. \ref{fig:deployment-diagram} defines the component layout for the entire workflow of the application proposed in this report.
-
-    \subsection{API - AWS}
-
-    \subsection{Front-end - Github Pages}
+        ReactJS is the library which will be used in this application due to its flexibility and ease of use with a relatively small learning curve. React Native (\url{https://facebook.github.io/react-native/}) is a variant which can be used to run the JavaScript code as a native mobile app. This is commonly used to build mobile apps, and has been done by some such as Instagram (as stated on the React Native website). While React Native will not be used in this report, it is important to bear in mind the code would be the same, and that React in general is highly optimised for mobile development. Due to these factors React is highly suited for the requirements of this application, as long as the final product is able to easily scale between different browser sizes including desktop and mobile browsers.
 
   \section{Use Case \& Class diagram}
 
@@ -444,7 +451,7 @@
 
   \newpage
   \section{Further work}
-    If offered more time to extend the functionality of the product, initially the existing problems mentioned in the preceeding paragraph could be addressed. Further to solving those issues, as a result of the low accuracy from the recommendation algorithm a more advanced recommender algorithm could be implemented. This could include developing a user system which is able to track individual user history for applying photo filters and have that data be used to provide more personalised recommendations for users.
+    If offered more time to extend the functionality of the product, initially the existing problems mentioned in the preceeding paragraph could be addressed. Further to solving those issues, as a result of the low accuracy from the recommendation algorithm a more advanced recommender algorithm could be implemented. This could include developing a user system which is able to track individual user history for applying photo filters and have that data be used to provide more personalised recommendations for users. Additionally, background processing could be introduced where uploaded images are not analysed and filtered synchronously but are done at the same time in order to reduce response times.
 
   \section{Author reflection}
     When starting this project I set out a personal goal to learn a few different technologies such as Python, React, and AWS. I do feel like I was able to do this and also create a product which serves its purpose relatively well. However, I think the biggest hindrance throughout the project was that every time I started work on a different part of the product implementation I would have to start from absolute scratch, spending more time learning the basics than implementing desired features. This lead to some gaps in quality of code design, and features which never made it into the final product.
