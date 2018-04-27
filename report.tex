@@ -9,7 +9,11 @@
 \usepackage{hyperref}
 \usepackage{csquotes}
 \usepackage{subcaption}
+\usepackage{float}
+\usepackage[toc,page]{appendix}
+\usepackage{booktabs}
 \usepackage[top=3.5cm,left=2.5cm,right=2.5cm,bottom=3.5cm]{geometry} % 'showframe' to see borders
+\addto{\captionsenglish}{\renewcommand{\bibname}{References}}
 
 \graphicspath{ {images/} }
 
@@ -17,13 +21,15 @@
 
 \title{\vspace{-3.5cm}\includegraphics[width=5cm]{mmu-white}\\\vspace{2cm}\reportTitle\\\vspace{1cm}\includegraphics[width=0.6\linewidth]{front-end-main}}
 
-\author{\textbf{Joshua Bridge}\\joshua.m.bridge@stu.mmu.ac.uk\\Student Number: 14032908\\\vspace{2cm}BSc (Hons) Software Engineering\\Unit: 6G6Z1101 Project\\Assignment Number: 1CWK100\vspace{2cm}}
+\author{\textbf{Joshua Bridge}\\joshua.m.bridge@stu.mmu.ac.uk\\Student Number: 14032908\\\vspace{2cm}BSc (Hons) Software Engineering\\Unit: 6G6Z1101 Project\\Assignment Number: 1CWK100\\Supervisor: Dr John Darby\vspace{1cm}}
 
-\pagenumbering{roman} % Start roman numbering
+\pagenumbering{roman}
 
 \begin{document}
 
 \maketitle
+
+\includegraphics[width=\linewidth]{declaration}
 
 \doublespacing
 
@@ -37,29 +43,45 @@
 
 \listoffigures
 
-% \listoftables
+\listoftables
 
 \doublespacing
 
 \chapter{Introduction} \pagenumbering{arabic}
-  Online social media has become one of the fastest expanding industries in the last few decades, with Instagram (\url{https://instagram.com}) boasting over 700 million users \citep{instagram2017users}. Facebook (\url{https://www.facebook.com}) says that its users upload one billion photos each week, with a total of 260 billion images currently being hosted on their site \citep{beaver2010finding}. On Instagram users can apply photo filters before posting the photo to their profile, in an effort to personalise the images. Other photo filtering apps exist such as VSCO, Snapseed by Google, Afterlight, and many others. While all of these apps allow users to apply filters to the images along with more fine-grained editing suite, none of them seem to offer a recommendation for which filter would be best suited for the image being edited.
+  Online social media has become one of the fastest expanding industries in the last few decades, with Instagram (\url{https://instagram.com}) boasting over 700 million users \citep{instagram2017users}. Facebook (\url{https://www.facebook.com}) says that its users upload one billion photos each week, with a total of 260 billion images currently being hosted on their site \citep{beaver2010finding}. On Instagram users can apply photo filters before posting the photo to their profile, in an effort to personalise the images. Other photo filtering apps exist such as VSCO, Snapseed by Google, Afterlight, and many others. While all of these apps allow users to apply filters to the images along with a more fine-grained editing suite, none of them seem to offer a recommendation for which filter would be best suited for the image being edited.
 
   In this project an application will be proposed which is made up of two major parts. The first is an online API which provides a service of photo filtering over the internet, which other applications or social media sites could potentially integrate to their photo sharing platforms. Other services of this nature do exist such as Pho.to (\url{http://developers.pho.to}) and Cloudinary (\url{https://cloudinary.com}) however to the authors knowledge, like the apps mentioned previously, these services do not offer a recommendation specifically for photo filters.
 
   Late into the project development an app called askAI \citep{askai2017app} was discovered which does provide recommendations for photo filters. In contrast to the application proposed in this report the app is only available as a downloadable mobile application rather than a web app. Furthermore the app seems to only recommend Instagram-specific filters, rather than providing custom filters of its own and the recommendations are not available as an external API. The Pho.to API mentioned previously appears to be made by the same developers of the askAI app, though they do not appear to be connected in functionality.
 
-  \subsection{Report Structure}
+  \section{Report Structure}
     The structure of the following report will first consist of a preliminary review of related literature. Once this has been completed a design will be proposed including justfications for each technology which is to be implemented into the final product. It will also define clear objectives which will be used to measure the success of the product. The next chapter will include details of how this design was implemented into a working application along with examples of performance and any issues encounterd while creating the product. The penultimate chapter will be an objective evaluation of the products performance in relation to the objectives outlined in the design chapter. Finally, a conclusion will summarise the experiences and findings of the report. After this will be a bibliography containing all references in the report along with an appendix containing various project related documents.
 
   \newpage
+  \section{Required Resources}
+    \singlespacing
+    \begin{itemize}
+      \item PyCharm
+      \item Python
+      \item WebStorm
+      \item React
+      \item Node Package Manager
+      \item Git SCM
+      \item Amazon Web Services account
+      \item Atom text editor (for \LaTeX)
+      \item TeX Live (for \LaTeX)
+    \end{itemize}
+    \doublespacing
 
-  \section{Aims}
+  \section{Aims} \label{sec:aims}
     In this report the following goals are what is expected to be achieved in the creation of the product:
 
     \begin{enumerate}
       \item To reduce complexity, information overload, and time spent for users when trying to customise photographs - usually in the expectation that the photographs will later be shared on social media.
       \item To create a secure platform for other applications to utilise the advancements made in this project.
     \end{enumerate}
+
+  \newpage
 
   \section{Objectives} \label{sec:objectives}
     The objectives below describe in more detail a set of more specific goals which should be achieved in order to create a successful product:
@@ -72,42 +94,54 @@
       \item \label{obj5}Implement a RESTful API which exposes both the recommender system and the filtering system to the front-end web app and allows developers to connect them into their own applications.
     \end{enumerate}
 
-  \section{Digital image processing}
-   Image processing deals with the analysis and manipulation of image data. An example of image processing is the use of digital signal processing. This involves converting analog sensory data from a digital camera sensor into a computer-interpretable format with minimal data loss from external sources such as noise and distortion.\\
-
-   \subsection{Bitmaps}
-     Before you are able to analyse an image, you must first represent the data in a way that it can be interpreted by a computer, and a human. One basic form of doing this is via a bitmap image. A bitmap - as its name implies - is a simple spacial mapping of values (bits) along a horizontal axis (x) and vertical axis (y). Using a greyscale image as an example, a bitmap representation of this would contain a number of values (or ‘pixels’), the number of which is equal to the product of the sizes of the x and y axes. Therefore an image of size 200 x 200 would contain 40,000 pixels. Each of these pixels contains an integer value representing brightness, typically ranging from 0 - 255 (the total value range of an 8-bit integer), ‘0’ being completely black, ‘255’ being completely white.
-
-     A colour image follows a very similar format, except now each pixel contains three brightness values instead of one. Each of these values map to the brightness of the colours (or ‘channels’) red, green and blue - in that order. Therefore a pixel with values (0,255,0) would be entirely green and a pixel with values (0,0,255) would be entirely blue. It should be noted that when these colours are displayed on a computer screen their colour values are additive (i.e. they can mix together to form a different, brighter colour). A pixel with values (0,255,255) would therefore represent cyan, and finally a pixel with values (255,255,255) would represent white.
-
-   \subsection{Image processing tasks}
-     There are several methods of improving the results of image analysis, one of which is to run an image processing algorithm against it. Generally this is to make the image clearer by sharpening it or removing noise - these are often referred to as low-level processing methods \citep{sonka2014image}. While these methods are often applied to make analysis by a computer a lot easier, they also can be used to increase the ‘clarity’ or the percieved ‘beauty’ of an image when viewed by a human.
-
-     \subsubsection{Sharpening}
-       For an image to be captured, it must first enter through some kind of lens which refracts the incoming light into a ‘focal point’ onto which some kind of light-sensitive surface is placed such as a digital image sensor. In order for an object to be perfectly ‘in focus’ it must be at the optimal distance from the lens - an area known as the ‘focal plane’. If the subject of a photograph is not near enough to the focal plane (either in front of it or behind it) then the subject will appear to blur.
-
-  \section{Computer vision}
-   Computer vision involves modelling the human vision system in such a way that a computer can interpret abstract visual data.
-
 \chapter{Literature Review}
   In order to understand the background of the technology involved in this project, it is necessary to complete a significant review into the current and past literature. This will help form a basis of knowledge from which the future development and analysis of the proposed system will utilise and build upon. This research will be vital in order to make use of the most optimal technology for any given problem.
 
-  The following review will be an investigation into the current knowledge of the major components of the proposed system, which are as follows:
+  The following review will be an investigation into the current knowledge of the more complex components of the proposed system, which are as follows:
 
   \begin{itemize}
     \item The recommendation system.
     \item The image filtering system.
-    % \item The web-based user interface.
   \end{itemize}
 
-  \section{Recommendation systems} \label{sec:lit-recc}
-    As defined in \cite{ricci2011introduction}, recommending content is a problem which involves attempting to predict what a user may desire at any given time when using a system. In the ‘internet era’ applications of this are far-reaching, such as recommending products on Amazon.com \cite{linden2003amazon}. Recommendation systems are a popular topic due to the \textquote{abundance of practical applications that help users to deal with information overload and provide personalized recommendations, content, and services to them} \citep{adomavicius2005toward}.
+  \section{Background Information}
+    Before the main body of the review is carried out, the following paragraphs will aim to explain the basic premise of how digital images are stored and manipulated. This will serve as a basis of knowledge on which the rest of the report will rely upon.
 
-    \cite{jannach2010recommender} describe three different methods for giving recommendations: Collaborative, Collaborative, Content-based, and Hybrid.
+    \subsection{Digital image processing}
+     Image processing deals with the analysis and manipulation of image data. An example of image processing is the use of digital signal processing. This involves converting analog sensory data from a digital camera sensor into a computer-interpretable format.
+
+     \subsubsection{Bitmap Images}
+       Before you are able to analyse an image, you must first represent the data in a way that it can be interpreted by a computer, and a human. One basic form of doing this is via a bitmap image. A bitmap - as its name implies - is a simple spacial mapping of values (bits) along a horizontal axis (x) and vertical axis (y). Using a greyscale image as an example, a bitmap representation of this would contain a number of values (or ‘pixels’), the number of which is equal to the product of the sizes of the x and y axes. Therefore an image of size 200x200 would contain 40,000 pixels. Each of these pixels contains an integer value representing brightness, typically ranging from [0,255] (the total value range of an 8-bit integer). In this case ‘0’ would represent a completely black value and ‘255’ would represent a completely white value. Note that sometimes these values can be represented by a decimal number in the range [0,1].
+
+       A colour image follows a very similar format, except now each pixel contains three brightness values instead of one. Each of these values map to the brightness of the colours (or ‘channels’) red, green and blue - in that order. Therefore a pixel with values (0,255,0) would be entirely green and a pixel with values (0,0,255) would be entirely blue. It should be noted that when these colours are displayed on a computer screen their colour values are additive (i.e. they can mix together to form a different, brighter colour). A pixel with values (0,255,255) would therefore represent cyan, and finally a pixel with values (255,255,255) would represent white. Note that the RGB representation of colour is just one form, there are others such as HSV (Hue, Saturation \& Value) which use a different method of representing colours.
+
+     \subsubsection{Photo filters}
+       A photo filter is a way of describing the process of altering an image's colour data, in order to produce a variety of different visual effects on the image. For example one photo filter could increase the contrast (i.e. increase the variance between dark and light pixels), or give it a more red-shaded appearence by increasing the brightness values in the red channel only. An example of a photo going through a process similar to this can be seen in figure \ref{fig:cat-filter}. The filter used in this instance is one of the filters implemented in the API defined in this report.
+
+       \begin{figure}[H]
+         \centering
+         \begin{subfigure}[b]{0.4\textwidth}
+           \centering
+           \includegraphics[width=0.8\linewidth]{cat-unfiltered}
+           \caption{Before filtering}
+         \end{subfigure}
+         \begin{subfigure}[b]{0.4\textwidth}
+           \centering
+           \includegraphics[width=0.8\linewidth]{cat-filtered}
+           \caption{After filtering}
+         \end{subfigure}
+         \caption[An example of a photo filter]{An example of a photo filter - original image from \protect\cite{cat2013image}}
+         \label{fig:cat-filter}
+       \end{figure}
+
+  \section{Recommendation systems} \label{sec:lit-recc}
+    As defined in \cite{ricci2011introduction}, recommending content is a problem which involves attempting to predict what a user may desire at any given time when using a system. In the ‘internet era’ applications of this are far-reaching, such as recommending products on Amazon.com \cite{linden2003amazon}. Recommendation systems are a popular topic due to the \textquote{\textit{abundance of practical applications that help users to deal with information overload and provide personalized recommendations, content, and services to them}} \citep{adomavicius2005toward}.
+
+    \cite{jannach2010recommender} describe three different methods for giving recommendations: Collaborative, Content-based, and Hybrid.
 
     \subsection{Collaborative recommendation}
       When using an online streaming platform that serves video content such as Netflix or YouTube, a user will visit their site looking for something to watch. The problem faced by these sites is trying to find content that the user hasn't seen before, but will align with the user's interests enough to make them want to watch it \citep{davidson2010youtube}, \citep{gomez2016netflix}.
-      The information needed to carry out such a prediction can include the semantic value of the entire users history of interaction with the system (often referred to as \textit{metadata} \citep{duval2002metadata}), from which preference can be extrapolated. If there is not enough metadata about the user from which to extrapolate preference with reasonable certainty, then preference can be inferred from other users of the system - especially users with a similar predicted preference.
+      The information needed to carry out such a prediction can include the semantic value of the entire user's history of interaction with the system (often referred to as \textit{metadata} \citep{duval2002metadata}), from which preference can be extrapolated. If there is not enough metadata about the user from which to extrapolate preference with reasonable certainty, then preference can be inferred from other users of the system - especially users with a similar predicted preference.
 
     \subsection{Content-based recommendation}
       There can sometimes be barriers to using collaborative recommendation, such as when the ‘cold-start problem’ is present. This problem describes when a user has just signed up to a website, it will not yet have enough information / user history to recommend them content \citep{schein2002methods}.
@@ -133,10 +167,10 @@
       \label{discoverweekly}
         Discover Weekly is a playlist made every week for every user of Spotify. Instead of getting humans to curate a playlist for each and every user, an algorithm is used to try and find a set of songs which it predicts the user will like, but hasn't listened to before. As described by \cite{popper2015dw} it does this by mixing collaborative and content-based recommendation. The first is done by analysing all playlists on spotify and determining their similarity to playlists made by the user. The next step is looking for songs in those playlists that the user in question hasn't heard yet.
 
-        \begin{figure}[ht]
+        \begin{figure}[H]
           \centering
           \includegraphics[width=\linewidth]{discoverweekly-dataflow}
-          \caption[System component architecture of Spotify's ‘Discover Weekly’]{System component architecture of Spotify's ‘Discover Weekly’ \protect\citep{johnson2015dw}}
+          \caption[System component architecture of Spotify's ‘Discover Weekly’]{System component architecture of Spotify's ‘Discover Weekly’ - diagram re-used from  \protect\cite{johnson2015dw}}
           \label{fig:discoverweekly-dataflow}
         \end{figure}
 
@@ -146,9 +180,9 @@
     There is little to no research into the area of developing new photo filters, likely due to the fact that filters can be very subjective in terms of what effect they have on an image. Furthermore the relation of that effect to how many people choose that filter for a certain type of photograph would require a large data-set. However it is possible to determine the most common types of photographs posted online, which will guide the process of creating filter templates.
 
     \subsection{Instagram} \label{sec:lit-insta}
-      In order to create image filters that users would want to apply to their photographs, an assessment must first be made about that the type of photos people tend to post online. ‘Instagram’ is a popular online photo-sharing platform that attracts over 700 million users \citep{instagram2017users}. An investigation by \cite{hu2014we} revealed that the types of photos posted on Instagram could be roughly categorised into eight types: \textquote{self-portraits, friends, activities, captioned photos (pictures with embedded text), food, gadgets, fashion, and pets}. The study clarifies that ‘self-portraits’ (or ‘selfies’) made up 24.2\% of the images posted, and ‘friends’ made up 22.4\%, totalling 46.6\% of the images analysed. From this it can be hypothesized that creating filters which are complimentary for skin-tones would be a contributing factor to success when developing image-filters.
+      In order to create image filters that users would want to apply to their photographs, an assessment must first be made about that the type of photos people tend to post online. Instagram is a popular online photo-sharing platform that attracts over 700 million users \citep{instagram2017users}. An investigation by \cite{hu2014we} revealed that the types of photos posted on Instagram could be roughly categorised into eight types: \textquote{\textit{self-portraits, friends, activities, captioned photos (pictures with embedded text), food, gadgets, fashion, and pets}}. The study clarifies that ‘self-portraits’ (or ‘selfies’) made up 24.2\% of the images posted, and ‘friends’ made up 22.4\%, totalling 46.6\% of the images analysed. From this it can be hypothesized that creating filters which are complimentary for skin-tones would be a contributing factor to success when developing image-filters.
 
-      \cite{hu2014we} however did not study a wide proportion of the Instagram user-base, in fact they only closely studied 50 users, out of an initial 95,343 ‘unique seed users’, from a user-base of more than 150 million when the study was taken place. Furthermore the study only analyses pictures posted online, to Instagram, with public profiles, and from users which had \textquote{at least 30 friends, 30 followers, and had posted at least 60 photos}. The system proposed in this report would not be limited in terms of where the resulting image would be posted, and has no requirement that the image be posted to an online website (other than the system itself). Therefore the findings in the study should only be used as a loose guideline for popular image categories when defining image-filter styles.
+      \cite{hu2014we} however did not study a wide proportion of the Instagram user-base, in fact they only closely studied 50 users, out of an initial 95,343 ‘unique seed users’, from a user-base of more than 150 million when the study was taken place. Furthermore the study only analyses pictures posted online, to Instagram, with public profiles, and from users which had \textquote{\textit{at least 30 friends, 30 followers, and had posted at least 60 photos}}. The system proposed in this report would not be limited in terms of where the resulting image would be posted, and has no requirement that the image be posted to an online website (other than the system itself). Therefore the findings in the study should only be used as a loose guideline for popular image categories when defining image-filter styles.
 
     \subsection{Personalisation of image enhancement}
       There has been some work done on the mapping of image enhancement styles to personal taste, although the field appears to be still in early stages. Two studies in particular have heavily contributed to the development in this field. \cite{kang2010personalization} found that when given a set of images, participants would deviate into different styles when asked to choose between two options of enhancement (e.g. lighter or darker). Furthermore, many participants preferred their own enhancement when compared to an averaged enhancement, suggesting that personalised enhancements would be a valuable tool.
@@ -180,10 +214,9 @@
     Following these features, these are some of the things that should be taken into consideration when implementing these features:
 
       \begin{itemize}
-        \item The application \& API should be relatively scalable with user traffic.
+        \item The user interface should be easy to use.
         \item It should not store any more information about users than it has to.
         \item It should maintain a reasonable level of security to prevent user-data from being stolen.
-        \item It should not store user images after the user has finished using the application.
       \end{itemize}
 
   \section{Application architecture proposal}
@@ -437,24 +470,67 @@
 
       The instance provided by MongoDB Atlas includes a primary server and two replica servers which handle back-ups of data. The dashboard information about the deployed instance used in the application is shown in figure \ref{fig:mongodb-atlas-dashboard}. Once the database service was up and running it was then trivial to change the connection details in the API code to then point at the new service instead of the local service. No further set up was needed to start using the service due to the fact that MongoDB has no constraints on what document structures can be stored on the database. If for example an SQL server was used it would have required runnning lots of SQL scripts to make sure the server was configured correctly before any data could be inputted into it.
 
+  \section{Testing} \label{sec:testing}
+    In order to fully evaluate the success of the recommendation system and the front=end web app, a short questionnaire was given to a set of 5 participants after given the chance to use the final implementation of the product. These questionnaires can be found in appendix \ref{app:questionnaires}.
+
+    The main factor in determining an accurate recommendation for a user is simply to find out if they would have chosen that recommended filter, whether or not it was not shown to them as recommended. The results from this question in the questionnaire are summarised in table \ref{tab:participant-recc-accuracy}. It can be seen that only 2 out of 5 participants thought the recommendation was accurate.
+
+    \begin{table}[h]
+      \centering
+        \begin{tabular}{c|c}
+        \toprule
+        \textbf{Participant Number} & \textbf{Accurate Recommendation} \\
+        \midrule
+        1     & No \\
+        2     & Yes \\
+        3     & No \\
+        4     & No \\
+        5     & Yes \\
+        \bottomrule
+        \end{tabular}%
+        \caption{Participant responses to recommendation accuracy}
+      \label{tab:participant-recc-accuracy}%
+    \end{table}%
+
+    Due to time constraints a full usability questionnaire could not be given out, however one question was included in the questionnaire which asked users to rate their experience of how simple they found the UI to navigate. These results can be seen in table \ref{tab:participant-ui-simplicity}. Note that the scores are in the range [1,5] where a score of 1 indicates a poor user experience and 5 indicates an excellent user experience. It can be seen that most participants found it to be quite usable, with the most popular score being 4 out of 5.
+
+    \begin{table}[h]
+      \centering
+        \begin{tabular}{c|c}
+        \toprule
+        \textbf{Participant Number} & \textbf{UI Simplicity Score} \\
+        \midrule
+        1     & 2 \\
+        2     & 4 \\
+        3     & 4 \\
+        4     & 3 \\
+        5     & 4 \\
+        \bottomrule
+        \end{tabular}%
+        \caption{Participant responses to UI simplicity}
+      \label{tab:participant-ui-simplicity}%
+    \end{table}%
+
+    Due to time constraints no white and black box testing could be carried out, however throughout development a focus was kept on ensuring the application was reliable in different use cases. For example when re-scaling the window size on the front-end, the code is able to handle re-sizing the components on the page to the correct proportional sizes.
+
 \chapter{Evaluation}
   Within this report there were multiple aims which were set out to be achieved. These aims covered a variety of subjects such as computer vision for image analysis and following best practices for developing an API and Web App. The main of these requirements were developing the API, developing the Web front-end, developing a system for filtering images, and most importantly developing a recommender system for those filters. The system proposed and implemented in chapter \ref{cha:implement} meets most of these goals well, and the evaluation of the product will consist of how well the original objectives set out in section \ref{sec:objectives} were met. The objectives and their evaluations are set out below.
 
   \newpage
   \subsubsection{Objective \ref{obj1} - Implement a simple online web application for filtering images using a framework or library designed for front-end development across multiple platforms.}
-    The front-end propsosed in this report is very effective in its use as an interface on top of the API. It is very lightweight and simple however it is also very functional and robust. The use of React really helped to streamline the development as it meant the structure in the code of the front-end was already much easier to work with. The component structure allows for very easy management of application flow, with variables and callback functions being passed to child components the application is easily able to deal with calling an external API and passing that information to components which automatically update upon recieving that information. However, the requirement for the web app working across multiple platforms was not met. During development the front-end was run purely on a few different desktop browsers such as Safari and Chrome which worked perfectly, however after finally deploying it to a public URL and accessing it from a mobile device it was found that no response came back to the device once an image was uploaded for filtering. Due to the nature of mobile devices there was no easy way to troubleshoot what was going on, where on a desktop device this could easily be done by debugging it in an IDE. Finally, there was not enough time after deploying the application to do an investigation into this issue therefore it can only be viewed as a partial failure to meet one of the objectives.
+    The front-end propsosed in this report is very effective in its use as an interface on top of the API. It is very lightweight and simple however it is also very functional and robust. The component structure of React allows for very easy management of application flow, with variables and callback functions being passed to child components the application is easily able to deal with calling an external API and passing that information to components which automatically update upon recieving that information. However, the requirement for the web app working across multiple platforms was not met. During development the front-end was run purely on a few different desktop browsers such as Safari and Chrome which worked fine, however after finally deploying it to a public URL and accessing it from a mobile device it was found that no response came back to the device once an image was uploaded for filtering. Due to the nature of mobile devices there was no easy way to troubleshoot what was going on, where on a desktop device this could easily be done by debugging it in an IDE. Finally, there was not enough time after deploying the application to do an investigation into this issue therefore it can only be viewed as a partial failure to meet one of the objectives.
 
   \subsubsection{Objective \ref{obj2} - Implement a back-end application which is able to process images including applying filters and creating thumbnails.}
-    The python back-end proposed in this report is highly capable of processing images due to the libraries available and its ability to connect easily to the API code. The libraries NumPy and Pillow were both instrumental to the success of image processing, however there was a decent learning curve to both of these along with python itself. This slightly limited how much processing was able to be done on the images as much more time had to be spent researching what libraries are available and what the best practices are for processing images in python. The code design proposed helped very much in how the filters connected to the API, as each filter was a sub-class of a base filter the filters could easily be run by looping through the ‘\texttt{\_\_subclasses\_\_()}’ method on the base class, passing in the ‘\texttt{Filterable}’ object each time. The ‘\texttt{Filterable}’ class also allowed the images to be quickly converted from Pillow types to NumPy types, and also to resize the image into different sizes such as thumbnail and preview sizes.
+    The python back-end proposed in this report is highly capable of processing images due to the libraries available and its ability to connect easily to the API code. The libraries NumPy and Pillow were both instrumental to the success of image processing, however there was a decent learning curve to both of these along with python itself. This slightly limited how much processing was able to be done on the images as much more time had to be spent researching what libraries are available and what the best practices are for processing images in python.
 
   \subsubsection{Objective \ref{obj3} - Research various recommender systems to determine the common technologies/solutions for solving the problem of recommendations.}
     In section \ref{sec:lit-recc} various examples of recommender systems were found and a general concensus was discovered that machine learning tools are a very useful tool in recommender systems. While there was not a single blanket solution, and the solutions available are often still not very effective - facing issues such as the cold-start problem which is still a popular research topic. Deep learning was discovered to be a very common tool in industry however this was not feasible due to performance constraints and that they did not seem to be fully applicable to the problem of recommending filters.
 
   \subsubsection{Objective \ref{obj4} - Implement a recommender system which is able to suggest photo filters to users based on image content.}
-    Within this objective the strict definition was met, as a recommender system was built which is able to recommend filters based on image content. However, the accuracy of the AI system which was implemented was not very high, and often came up with highly inconsistent values when producing classification accuracy reports. When using a trained model with a higher trained accuracy of around 35\% on average per class, the model did however seem to have some predictability in how it would recommend filters such as when the photo included one or more faces. The low accuracy would seem to suggest that the method for training the model was not ideal in that users may have had differing tastes for which filters to apply. Furthermore the recommender would occasionally suggest different recommendations when the same photograph was uploaded twice. This is likely a combination of the K-Means analysis producing slightly different results each time and the classifiers not having a strong enough trained model.
+    Within this objective the strict definition was met, as a recommender system was built which is able to recommend filters based on image content. However, the accuracy of the AI system which was implemented was not very high, and often came up with highly inconsistent values when producing classification accuracy reports. When using a trained model with a higher trained accuracy of around 37\% on average per class, the model did however seem to have some predictability in how it would recommend filters such as when the photo included one or more faces. The low accuracy would seem to suggest that the method for training the model was not ideal in that users may have had differing tastes for which filters to apply. Furthermore the recommender would occasionally suggest different recommendations when the same photograph was uploaded twice. This is likely a combination of the K-Means analysis producing slightly different results each time and the classifiers not having a strong enough trained model. Finally the results from section \ref{sec:testing} showed that users generally did not find the recommendation to be accurate, with only 2 out of 5 saying they found the recommendation to be accurate.
 
   \subsubsection{Objective \ref{obj5} - Implement a RESTful API which exposes both the recommender system and the filtering system to the front-end web app and allows developers to connect them into their own applications.}
-    This objective was met easily with the python back-end using the Flask library. This library included helper methods for handling RESTful API's and allowed for doing things such as responding with an ‘\texttt{HTTP 201 CREATED}’ response when a resource was uploaded to the site via an ‘\texttt{HTTP POST}’ request. The URI structure was also within REST constraints, with images being uploaded to the ‘\texttt{/images/}’ URL via an ‘\texttt{HTTP POST}’ request, then being accesed using an ‘\texttt{HTTP GET}’ request from that URL such as\\ ‘\texttt{/images/98119-black\_and\_white.jpg}’. The URI structure was relatively simple due to the simplicity of the request being made therefore it was easier to develop. The responses from the API were also very easy to output as JSON due to python's ability to define a ‘\texttt{dict}’ object using a very similar syntax to JSON, directly in the code. This ‘\texttt{dict}’ object could then easily be translated into an HTTP response using Flask's ‘\texttt{jsonify()}’ method. The API was then easily connected to the front-end and using React which is based in JavaScript made handling JSON responses that much easier, due to JavaScript's high integration with JSON (which makes sense as JSON stands for JavaScript Object Notation...).
+    This objective was met easily with the python back-end using the Flask library. This library included helper methods for handling RESTful API's and allowed for doing things such as responding with an ‘\texttt{HTTP 201 CREATED}’ response when a resource was uploaded to the site via an ‘\texttt{HTTP POST}’ request. The URI structure was also within REST constraints, with images being uploaded to the ‘\texttt{/images/}’ URL via an ‘\texttt{HTTP POST}’ request, then being accesed using an ‘\texttt{HTTP GET}’ request from that URL such as\\ ‘\texttt{/images/98119-black\_and\_white.jpg}’. The URI structure was relatively simple due to the simplicity of the request being made therefore it was easier to develop. The API was then easily connected to the front-end and showed that it was possible to integrate the API into a client application.
 
 \chapter{Conclusion}
   This report has outlined a system which can be used to filter photographs by accessing a REST API, or by connecting to an accompanying web app using a desktop web browser. The API and web app are able to give a recommendation of which filter should be chosen based on the content of the image, however this recommendation was not proven to be very accurate. The code solution is simple and includes many carefully chosen libraries to handle difficult tasks, rather than implementing them manually which creates unnecessary work and introduces too much complexity into the product. Due to time constraints some issues were left unsolved such as not having HTTPS on the front-end server and the front-end not working on mobile devices.
@@ -473,5 +549,174 @@
 
 \bibliographystyle{agsm}
 \bibliography{report}
+
+\begin{appendices}
+
+  \chapter{Terms of Reference} \label{app:tor}
+    Please note that the project title, aims, and objectives have changed since the following terms of reference was submitted. The course-specific learning outcomes have not changed however. The updated aims and objectives can be seen in sections \ref{sec:aims} and \ref{sec:objectives} respectively.
+
+    \begin{figure}[h]
+      \centering
+      \includegraphics[scale=0.8]{tor-1}
+    \end{figure}
+
+    \begin{figure}[h]
+      \centering
+      \includegraphics[scale=0.8]{tor-2}
+    \end{figure}
+
+    \begin{figure}[h]
+      \centering
+      \includegraphics[scale=0.8]{tor-3}
+    \end{figure}
+
+    \begin{figure}[h]
+      \centering
+      \includegraphics[scale=0.8]{tor-4}
+    \end{figure}
+
+    \begin{figure}[h]
+      \centering
+      \includegraphics[scale=0.8]{tor-5}
+    \end{figure}
+
+  \chapter{Ethics documents}
+    Again please note that while the exact title and project activities have changed since the original submission of the ethics documents, none of the ethical requirements have changed. The updated project title can be found on the cover of this report, and the abstract near the start of the report contains an updated description of the project activities.
+
+    \begin{figure}[h]
+      \centering
+      \includegraphics[scale=0.8]{ethics-checklist-1}
+    \end{figure}
+
+    \begin{figure}[h]
+      \centering
+      \includegraphics[scale=0.8]{ethics-checklist-2}
+    \end{figure}
+
+    \begin{figure}[h]
+      \centering
+      \includegraphics[scale=0.8]{ethics-checklist-3}
+    \end{figure}
+
+    \begin{figure}[h]
+      \centering
+      \includegraphics[scale=0.8]{pis-1}
+    \end{figure}
+
+    \begin{figure}[h]
+      \centering
+      \includegraphics[scale=0.8]{pis-2}
+    \end{figure}
+
+    \begin{figure}[h]
+      \centering
+      \includegraphics[scale=0.8]{insurance-checklist-1}
+    \end{figure}
+
+    \begin{figure}[h]
+      \centering
+      \includegraphics[scale=0.8]{insurance-checklist-2}
+    \end{figure}
+
+    \begin{figure}[h]
+      \centering
+      \includegraphics[scale=0.8]{insurance-checklist-3}
+    \end{figure}
+
+    \begin{figure}[h]
+      \centering
+      \includegraphics[scale=0.8]{risk-assessment-1}
+    \end{figure}
+
+    \begin{figure}[h]
+      \centering
+      \includegraphics[scale=0.8]{risk-assessment-2}
+    \end{figure}
+
+  \chapter{Presentation slides}
+
+    \begin{figure}[h]
+      \centering
+      \includegraphics[width=0.9\linewidth]{presentation-1}
+    \end{figure}
+
+    \begin{figure}[h]
+      \centering
+      \includegraphics[width=0.9\linewidth]{presentation-2}
+    \end{figure}
+
+    \begin{figure}[h]
+      \centering
+      \includegraphics[width=0.9\linewidth]{presentation-3}
+    \end{figure}
+
+    \begin{figure}[h]
+      \centering
+      \includegraphics[width=0.9\linewidth]{presentation-4}
+    \end{figure}
+
+    \begin{figure}[h]
+      \centering
+      \includegraphics[width=0.9\linewidth]{presentation-5}
+    \end{figure}
+
+    \begin{figure}[h]
+      \centering
+      \includegraphics[width=0.9\linewidth]{presentation-6}
+    \end{figure}
+
+    \begin{figure}[h]
+      \centering
+      \includegraphics[width=0.9\linewidth]{presentation-7}
+    \end{figure}
+
+    \begin{figure}[h]
+      \centering
+      \includegraphics[width=0.9\linewidth]{presentation-8}
+    \end{figure}
+
+    \begin{figure}[h]
+      \centering
+      \includegraphics[width=0.9\linewidth]{presentation-9}
+    \end{figure}
+
+  \chapter{Product Link}
+    OneDrive Link\\
+    \url{http://inflex.co}\\
+    \url{https://api.inflex.co}
+
+  \chapter{Questionnaires} \label{app:questionnaires}
+
+    \begin{figure}[h]
+      \centering
+      \includegraphics[width=0.9\linewidth]{questionnaire-1}
+      \caption{Participant 1 questionnaire}
+    \end{figure}
+
+    \begin{figure}[h]
+      \centering
+      \includegraphics[width=0.9\linewidth]{questionnaire-2}
+      \caption{Participant 2 questionnaire}
+    \end{figure}
+
+    \begin{figure}[h]
+      \centering
+      \includegraphics[width=0.9\linewidth]{questionnaire-3}
+      \caption{Participant 3 questionnaire}
+    \end{figure}
+
+    \begin{figure}[h]
+      \centering
+      \includegraphics[width=0.9\linewidth]{questionnaire-4}
+      \caption{Participant 4 questionnaire}
+    \end{figure}
+
+    \begin{figure}[h]
+      \centering
+      \includegraphics[width=0.9\linewidth]{questionnaire-5}
+      \caption{Participant 5 questionnaire}
+    \end{figure}
+
+\end{appendices}
 
 \end{document}
