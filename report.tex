@@ -15,9 +15,11 @@
 
 \def \reportTitle{Recommending photo filters via image content in a Web App \& REST API}
 
-\title{\vspace{-2cm}\includegraphics[width=5cm]{mmu-white.pdf}\\\vspace{4cm}\reportTitle\vspace{1cm}}
+\title{\vspace{-3.5cm}\includegraphics[width=5cm]{mmu-white}\\\vspace{2cm}\reportTitle\\\vspace{1cm}\includegraphics[width=0.6\linewidth]{front-end-main}}
 
-\author{Joshua Bridge\\14032908\\joshua.m.bridge@stu.mmu.ac.uk}
+\author{\textbf{Joshua Bridge}\\joshua.m.bridge@stu.mmu.ac.uk\\Student Number: 14032908\\\vspace{2cm}BSc (Hons) Software Engineering\\Unit: 6G6Z1101 Project\\Assignment Number: 1CWK100\vspace{2cm}}
+
+\pagenumbering{roman} % Start roman numbering
 
 \begin{document}
 
@@ -30,16 +32,24 @@
 \end{abstract}
 
 \onehalfspacing
+
 \tableofcontents
-\doublespacing
 
 \listoffigures
 
 % \listoftables
 
-\chapter{Introduction}
-  % TODO Complete summary of introduction
-  % ADD
+\doublespacing
+
+\chapter{Introduction} \pagenumbering{arabic}
+  Online social media has become one of the fastest expanding industries in the last few decades, with Instagram (\url{https://instagram.com}) boasting over 700 million users \citep{instagram2017users}. Facebook (\url{https://www.facebook.com}) says that its users upload one billion photos each week, with a total of 260 billion images currently being hosted on their site \citep{beaver2010finding}. On Instagram users can apply photo filters before posting the photo to their profile, in an effort to personalise the images. Other photo filtering apps exist such as VSCO, Snapseed by Google, Afterlight, and many others. While all of these apps allow users to apply filters to the images along with more fine-grained editing suite, none of them seem to offer a recommendation for which filter would be best suited for the image being edited.
+
+  In this project an application will be proposed which is made up of two major parts. The first is an online API which provides a service of photo filtering over the internet, which other applications or social media sites could potentially integrate to their photo sharing platforms. Other services of this nature do exist such as Pho.to (\url{http://developers.pho.to}) and Cloudinary (\url{https://cloudinary.com}) however to the authors knowledge, like the apps mentioned previously, these services do not offer a recommendation specifically for photo filters.
+
+  Late into the project development an app called askAI \citep{askai2017app} was discovered which does provide recommendations for photo filters. In contrast to the application proposed in this report the app is only available as a downloadable mobile application rather than a web app. Furthermore the app seems to only recommend Instagram-specific filters, rather than providing custom filters of its own and the recommendations are not available as an external API. The Pho.to API mentioned previously appears to be made by the same developers of the askAI app, though they do not appear to be connected in functionality.
+
+  \subsection{Report Structure}
+    The structure of the following report will first consist of a preliminary review of related literature. Once this has been completed a design will be proposed including justfications for each technology which is to be implemented into the final product. It will also define clear objectives which will be used to measure the success of the product. The next chapter will include details of how this design was implemented into a working application along with examples of performance and any issues encounterd while creating the product. The penultimate chapter will be an objective evaluation of the products performance in relation to the objectives outlined in the design chapter. Finally, a conclusion will summarise the experiences and findings of the report. After this will be a bibliography containing all references in the report along with an appendix containing various project related documents.
 
   \newpage
 
@@ -256,7 +266,7 @@
       While there is little in the way of academic comparisons between JavaScript frameworks as told by \cite{graziotin2013making}, a subjective comparison can be made to find the most suitable framework for this application. Two commonly used libraries/frameworks are React and Angular which are discussed briefly below.
 
       \subsubsection{React Vs Angular}
-        ReactJS (\url{https://reactjs.org}) is a JavaScript library for creating user interfaces which was created by Facebook (\url{https://www.facebook.com}). As it is entirely in JavaScript and introduces a component structure which updates when any data state changes, it is a simple way to add lots of functionality in a short time. AngularJS (\url{https://angularjs.org}) is another JavaScript library however it is not the recommended version of angular which is Angular 4 (\url{https://angular.io}) and is a framework rather than a library. Angular 4 uses typescript which could introduce complexity and the framework comes with a lot of baggage which brings a steeper learning curve as discussed by \cite{neuhaus_2017}.
+        React (\url{https://reactjs.org}) is a JavaScript library for creating user interfaces which was created by Facebook. As it is entirely in JavaScript and introduces a component structure which updates when any data state changes, it is a simple way to add lots of functionality in a short time. Angular (\url{https://angularjs.org}) is another JavaScript library however it is not the recommended version which is Angular 4 (\url{https://angular.io}). Angular 4 is a framework rather than a library and uses TypeScript which could introduce complexity, and it comes with a lot of baggage which could bring a much steeper learning curve as discussed by \cite{neuhaus_2017}.
 
       \subsubsection{Choosing React}
         ReactJS is the library which will be used in this application due to its flexibility and ease of use with a relatively small learning curve. React Native (\url{https://facebook.github.io/react-native/}) is a variant which can be used to run the JavaScript code as a native mobile app. This is commonly used to build mobile apps, and has been done by some such as Instagram (as stated on the React Native website). While React Native will not be used in this report, it is important to bear in mind the code would be the same, and that React in general is highly optimised for mobile development. Due to these factors React is highly suited for the requirements of this application, as long as the final product is able to easily scale between different browser sizes including desktop and mobile browsers.
